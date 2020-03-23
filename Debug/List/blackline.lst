@@ -1,0 +1,403 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:12
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\blackline.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWAFE4.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\blackline.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\blackline.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\blackline.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\blackline.c
+      1          #include "msp430.h"
+      2          #include "msp430fr2355.h"
+      3          #include "macros.h"
+      4          #include "functions.h"
+      5          
+      6          
+      7          extern volatile int ADC_Left_Detect;
+      8          extern volatile int ADC_Right_Detect;
+      9          extern volatile unsigned int pulse;
+     10          extern volatile unsigned int counter;
+     11          extern volatile unsigned int blackline_counter;
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     12          int on_blackline = RESET;
+   \                     on_blackline:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     13          int blackline_position = RESET;
+   \                     blackline_position:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     14          int car_position;
+   \                     car_position:
+   \   000000                DS8 2
+     15          extern volatile unsigned int ready_to_move_counter;
+     16          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     17          int follow_Flag = FALSE;
+   \                     follow_Flag:
+   \   000000                DS8 2
+     18          extern int switch_toggle;
+     19          extern int movement_states;
+     20          extern int following_state;
+     21          
+     22          
+
+   \                                 In  segment CODE, align 2
+     23          int check_BlackLine(void){
+   \                     check_BlackLine:
+     24            
+     25            if((ADC_Left_Detect > LEFT_THRESH)&&(ADC_Right_Detect > RIGHT_THRESH)) return BOTH;
+   \   000000   B2905B00.... CMP.W   #0x5b, &ADC_Left_Detect
+   \   000006   0638         JL      ??check_BlackLine_0
+   \   000008   B2907900.... CMP.W   #0x79, &ADC_Right_Detect
+   \   00000E   0238         JL      ??check_BlackLine_0
+   \   000010   1C43         MOV.W   #0x1, R12
+   \   000012   1001         RETA
+     26            else if((ADC_Left_Detect > LEFT_THRESH)&&(ADC_Right_Detect < RIGHT_THRESH)) return LB_RW;
+   \                     ??check_BlackLine_0:
+   \   000014   B2905B00.... CMP.W   #0x5b, &ADC_Left_Detect
+   \   00001A   0738         JL      ??check_BlackLine_1
+   \   00001C   B2907800.... CMP.W   #0x78, &ADC_Right_Detect
+   \   000022   0334         JGE     ??check_BlackLine_1
+   \   000024   3C400300     MOV.W   #0x3, R12
+   \   000028   1001         RETA
+     27            else if((ADC_Left_Detect < LEFT_THRESH)&&(ADC_Right_Detect > RIGHT_THRESH)) return LW_RB;
+   \                     ??check_BlackLine_1:
+   \   00002A   B2905A00.... CMP.W   #0x5a, &ADC_Left_Detect
+   \   000030   0634         JGE     ??check_BlackLine_2
+   \   000032   B2907900.... CMP.W   #0x79, &ADC_Right_Detect
+   \   000038   0238         JL      ??check_BlackLine_2
+   \   00003A   2C43         MOV.W   #0x2, R12
+   \   00003C   1001         RETA
+     28            else return OFF;
+   \                     ??check_BlackLine_2:
+   \   00003E   0C43         MOV.W   #0x0, R12
+   \   000040   1001         RETA
+     29            
+     30          }
+     31          
+
+   \                                 In  segment CODE, align 2
+     32          void position_BlackLine(void){
+   \                     position_BlackLine:
+     33            
+     34            switch(blackline_position){
+   \   000000   1F42....     MOV.W   &blackline_position, R15
+   \   000004   0F83         SUB.W   #0x0, R15
+   \   000006   0A24         JEQ     ??position_BlackLine_3
+   \   000008   1F83         SUB.W   #0x1, R15
+   \   00000A   3A24         JEQ     ??position_BlackLine_4
+   \   00000C   1F83         SUB.W   #0x1, R15
+   \   00000E   0D24         JEQ     ??position_BlackLine_5
+   \   000010   1F83         SUB.W   #0x1, R15
+   \   000012   2024         JEQ     ??position_BlackLine_6
+   \   000014   2F82         SUB.W   #0x4, R15
+   \   000016   3B24         JEQ     ??position_BlackLine_7
+   \   000018   1F83         SUB.W   #0x1, R15
+   \   00001A   1001         RETA
+     35            case OFF:
+     36              move_clockwise_slowly();
+   \                     ??position_BlackLine_3:
+   \   00001C   ........     CALLA   #move_clockwise_slowly
+     37              blackline_position = check_BlackLine();
+   \   000020   ........     CALLA   #check_BlackLine
+   \   000024   824C....     MOV.W   R12, &blackline_position
+     38              break;
+   \   000028   1001         RETA
+     39            case LW_RB:
+     40              if((blackline_counter>HALF)&&(blackline_counter< ONE + HALF)){
+   \                     ??position_BlackLine_5:
+   \   00002A   B2906500.... CMP.W   #0x65, &blackline_counter
+   \   000030   0928         JNC     ??position_BlackLine_8
+   \   000032   B2902C01.... CMP.W   #0x12c, &blackline_counter
+   \   000038   052C         JC      ??position_BlackLine_8
+     41                car_position = LW_RB;
+   \   00003A   A243....     MOV.W   #0x2, &car_position
+     42                blackline_position = DONE;
+   \   00003E   B242....     MOV.W   #0x8, &blackline_position
+   \   000042   1001         RETA
+     43              } else {
+     44                stop_car();
+   \                     ??position_BlackLine_8:
+   \   000044   ........     CALLA   #stop_car
+     45                blackline_counter = RESET;
+   \   000048   8243....     MOV.W   #0x0, &blackline_counter
+     46                blackline_position = CHECK;
+   \   00004C   B2400700.... MOV.W   #0x7, &blackline_position
+     47              }
+     48              break;
+   \   000052   1001         RETA
+     49            case LB_RW:
+     50              if((blackline_counter>HALF)&&(blackline_counter< ONE + HALF)){
+   \                     ??position_BlackLine_6:
+   \   000054   B2906500.... CMP.W   #0x65, &blackline_counter
+   \   00005A   0A28         JNC     ??position_BlackLine_9
+   \   00005C   B2902C01.... CMP.W   #0x12c, &blackline_counter
+   \   000062   062C         JC      ??position_BlackLine_9
+     51                car_position = LB_RW;
+   \   000064   B2400300.... MOV.W   #0x3, &car_position
+     52                blackline_position = DONE;
+   \   00006A   B242....     MOV.W   #0x8, &blackline_position
+   \   00006E   1001         RETA
+     53              } else {
+     54                stop_car();
+   \                     ??position_BlackLine_9:
+   \   000070   ........     CALLA   #stop_car
+     55                blackline_counter = RESET;
+   \   000074   8243....     MOV.W   #0x0, &blackline_counter
+     56                blackline_position = CHECK;
+   \   000078   B2400700.... MOV.W   #0x7, &blackline_position
+     57              }
+     58              break;
+   \   00007E   1001         RETA
+     59            case BOTH:
+     60              move_clockwise_slowly();
+   \                     ??position_BlackLine_4:
+   \   000080   ........     CALLA   #move_clockwise_slowly
+     61              blackline_position = check_BlackLine();
+   \   000084   ........     CALLA   #check_BlackLine
+   \   000088   824C....     MOV.W   R12, &blackline_position
+     62              break;
+   \   00008C   1001         RETA
+     63            case CHECK:
+     64              if(blackline_counter > ONE) blackline_position = check_BlackLine();
+   \                     ??position_BlackLine_7:
+   \   00008E   B290C900.... CMP.W   #0xc9, &blackline_counter
+   \   000094   0428         JNC     ??position_BlackLine_10
+   \   000096   ........     CALLA   #check_BlackLine
+   \   00009A   824C....     MOV.W   R12, &blackline_position
+     65              break;
+     66            case DONE:
+     67              break;
+     68            }
+     69          }
+   \                     ??position_BlackLine_10:
+   \   00009E   1001         RETA
+     70          
+
+   \                                 In  segment CODE, align 2
+     71          void get_on_blackline(void){
+   \                     get_on_blackline:
+     72            
+     73            switch(counter){                                  // Flag to turn make care move.
+   \   000000   B2906400.... CMP.W   #0x64, &counter
+   \   000006   0220         JNE     ??get_on_blackline_6
+     74            case HALF:
+     75              switch_toggle = ON;
+   \   000008   9243....     MOV.W   #0x1, &switch_toggle
+     76              break;
+     77            }
+     78            
+     79            /*-------------------------HOLD STATE------------------------------------------*/
+     80            switch(movement_states){
+   \                     ??get_on_blackline_6:
+   \   00000C   1F42....     MOV.W   &movement_states, R15
+   \   000010   0F83         SUB.W   #0x0, R15
+   \   000012   0E24         JEQ     ??get_on_blackline_7
+   \   000014   1F83         SUB.W   #0x1, R15
+   \   000016   1424         JEQ     ??get_on_blackline_8
+   \   000018   1F83         SUB.W   #0x1, R15
+   \   00001A   2824         JEQ     ??get_on_blackline_9
+   \   00001C   1F83         SUB.W   #0x1, R15
+   \   00001E   3C24         JEQ     ??get_on_blackline_10
+   \   000020   3F800300     SUB.W   #0x3, R15
+   \   000024   4324         JEQ     ??get_on_blackline_11
+   \   000026   2F82         SUB.W   #0x4, R15
+   \   000028   5724         JEQ     ??get_on_blackline_12
+   \   00002A   1F83         SUB.W   #0x1, R15
+   \   00002C   4B24         JEQ     ??get_on_blackline_13
+   \   00002E   1001         RETA
+     81            case HOLD:                                       // Do nothing
+     82              if(switch_toggle) movement_states = MOVE;      // Until flag is set.
+   \                     ??get_on_blackline_7:
+   \   000030   8293....     CMP.W   #0x0, &switch_toggle
+   \   000034   0224         JEQ     ??get_on_blackline_14
+   \   000036   9243....     MOV.W   #0x1, &movement_states
+     83              switch_toggle = RESET;
+   \                     ??get_on_blackline_14:
+   \   00003A   8243....     MOV.W   #0x0, &switch_toggle
+     84              break;
+   \   00003E   1001         RETA
+     85            case MOVE:
+     86              switch_toggle = RESET;
+   \                     ??get_on_blackline_8:
+   \   000040   8243....     MOV.W   #0x0, &switch_toggle
+     87              car_forward_slow();
+   \   000044   ........     CALLA   #car_forward_slow
+     88              if(check_BlackLine()){
+   \   000048   ........     CALLA   #check_BlackLine
+   \   00004C   0C93         CMP.W   #0x0, R12
+   \   00004E   0624         JEQ     ??get_on_blackline_15
+     89                stop_car();
+   \   000050   ........     CALLA   #stop_car
+     90                counter = RESET;
+   \   000054   8243....     MOV.W   #0x0, &counter
+     91                switch_toggle = ON;
+   \   000058   9243....     MOV.W   #0x1, &switch_toggle
+     92              }
+     93              if(switch_toggle){
+   \                     ??get_on_blackline_15:
+   \   00005C   8293....     CMP.W   #0x0, &switch_toggle
+   \   000060   3D24         JEQ     ??get_on_blackline_1
+     94                movement_states = BLACKLINE;
+   \   000062   A243....     MOV.W   #0x2, &movement_states
+     95                counter = RESET;
+   \   000066   8243....     MOV.W   #0x0, &counter
+     96              }
+     97              break;
+   \   00006A   1001         RETA
+     98          /*-------------------------FIND BLACK LINE------------------------------------------*/
+     99          
+    100            case BLACKLINE:
+    101              if(blackline_position == DONE){
+   \                     ??get_on_blackline_9:
+   \   00006C   B292....     CMP.W   #0x8, &blackline_position
+   \   000070   0520         JNE     ??get_on_blackline_16
+    102                movement_states = ON_BLACKLINE;
+   \   000072   B2400300.... MOV.W   #0x3, &movement_states
+    103                ready_to_move_counter= RESET;
+   \   000078   8243....     MOV.W   #0x0, &ready_to_move_counter
+    104              }
+    105              if(counter > TWO){          // black line detection after 2 seconds
+   \                     ??get_on_blackline_16:
+   \   00007C   B2909101.... CMP.W   #0x191, &counter
+   \   000082   0228         JNC     ??get_on_blackline_17
+    106                position_BlackLine();
+   \   000084   ........     BRA     #position_BlackLine
+    107              } else if (counter > ONE) { // will turn no matter what for a second
+   \                     ??get_on_blackline_17:
+   \   000088   B290C900.... CMP.W   #0xc9, &counter
+   \   00008E   0228         JNC     ??get_on_blackline_18
+    108                move_clockwise_slowly();
+   \   000090   ........     BRA     #move_clockwise_slowly
+    109              } else {
+    110                stop_car(); // pauses for about a second before doing anything
+   \                     ??get_on_blackline_18:
+   \   000094   ........     BRA     #stop_car
+    111              }
+    112              
+    113              break;
+    114              
+    115            /*-------------------------ON THE BLACK LINE------------------------------------------*/
+    116              
+    117            case ON_BLACKLINE:
+    118              stop_car();
+   \                     ??get_on_blackline_10:
+   \   000098   ........     CALLA   #stop_car
+    119              if(ready_to_move_counter > ONE) movement_states = FOLLOW_BLACKLINE;
+   \   00009C   B290C900.... CMP.W   #0xc9, &ready_to_move_counter
+   \   0000A2   1C28         JNC     ??get_on_blackline_1
+   \   0000A4   B2400600.... MOV.W   #0x6, &movement_states
+    120              break;
+   \   0000AA   1001         RETA
+    121            case FOLLOW_BLACKLINE:
+    122              follow_BlackLine();
+   \                     ??get_on_blackline_11:
+   \   0000AC   ........     CALLA   #follow_BlackLine
+    123              follow_Flag = TRUE;
+   \   0000B0   9243....     MOV.W   #0x1, &follow_Flag
+    124              if(following_state == FOLLOW_DONE) movement_states = FOLLOW_DONE;
+   \   0000B4   B2900B00.... CMP.W   #0xb, &following_state
+   \   0000BA   1020         JNE     ??get_on_blackline_1
+   \   0000BC   B2400B00.... MOV.W   #0xb, &movement_states
+    125              break;
+   \   0000C2   1001         RETA
+    126            case FOLLOW_DONE:
+    127              follow_BlackLine();
+   \                     ??get_on_blackline_13:
+   \   0000C4   ........     CALLA   #follow_BlackLine
+    128              if(following_state == PROJECT_7_FINISHED) movement_states = PROJECT_7_FINISHED;
+   \   0000C8   B2900A00.... CMP.W   #0xa, &following_state
+   \   0000CE   0620         JNE     ??get_on_blackline_1
+   \   0000D0   B2400A00.... MOV.W   #0xa, &movement_states
+    129              break;
+   \   0000D6   1001         RETA
+    130            case PROJECT_7_FINISHED:
+    131              stop_car();
+   \                     ??get_on_blackline_12:
+   \   0000D8   ........     CALLA   #stop_car
+    132              break;
+    133            }
+    134          }
+   \                     ??get_on_blackline_1:
+   \   0000DC   1001         RETA
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   check_BlackLine
+      4   get_on_blackline
+        4   -> car_forward_slow
+        4   -> check_BlackLine
+        4   -> follow_BlackLine
+        0   -> move_clockwise_slowly
+        0   -> position_BlackLine
+        0   -> stop_car
+        4   -> stop_car
+      4   position_BlackLine
+        4   -> check_BlackLine
+        4   -> move_clockwise_slowly
+        4   -> stop_car
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  blackline_position
+       2  car_position
+      66  check_BlackLine
+       2  follow_Flag
+     222  get_on_blackline
+       2  on_blackline
+     160  position_BlackLine
+
+ 
+ 448 bytes in segment CODE
+   8 bytes in segment DATA16_Z
+ 
+ 448 bytes of CODE memory
+   8 bytes of DATA memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,367 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:13
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\movement.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB4D1.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\movement.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\movement.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\movement.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\movement.c
+      1          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x454
+   \   union <unnamed> _A_TB3CCR1_L
+   \                     _A_TB3CCR1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x456
+   \   union <unnamed> _A_TB3CCR2_L
+   \                     _A_TB3CCR2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x458
+   \   union <unnamed> _A_TB3CCR3_L
+   \                     _A_TB3CCR3_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x45a
+   \   union <unnamed> _A_TB3CCR4_L
+   \                     _A_TB3CCR4_L:
+   \   000000                DS8 2
+      2          #include "msp430fr2355.h"
+      3          #include "macros.h"
+      4          #include "functions.h"
+      5          
+
+   \                                 In  segment CODE, align 2
+      6          void stop_car(void){
+   \                     stop_car:
+      7            RIGHT_FORWARD_SPEED = STOP;
+   \   000000   82435404     MOV.W   #0x0, &0x454
+      8            LEFT_FORWARD_SPEED = STOP;
+   \   000004   82435604     MOV.W   #0x0, &0x456
+      9            RIGHT_REVERSE_SPEED = STOP;
+   \   000008   82435804     MOV.W   #0x0, &0x458
+     10            LEFT_REVERSE_SPEED = STOP;
+   \   00000C   82435A04     MOV.W   #0x0, &0x45a
+     11          }
+   \   000010   1001         RETA
+   \   000012                REQUIRE _A_TB3CCR1_L
+   \   000012                REQUIRE _A_TB3CCR2_L
+   \   000012                REQUIRE _A_TB3CCR3_L
+   \   000012                REQUIRE _A_TB3CCR4_L
+     12          
+
+   \                                 In  segment CODE, align 2
+     13          void car_forward_slow(){
+   \                     car_forward_slow:
+     14            RIGHT_FORWARD_SPEED = RIGHT_SLOW;
+   \   000000   B24058025404 MOV.W   #0x258, &0x454
+     15            LEFT_FORWARD_SPEED = LEFT_SLOW;
+   \   000006   B24058025604 MOV.W   #0x258, &0x456
+     16            RIGHT_REVERSE_SPEED = STOP;
+   \   00000C   82435804     MOV.W   #0x0, &0x458
+     17            LEFT_REVERSE_SPEED = STOP;
+   \   000010   82435A04     MOV.W   #0x0, &0x45a
+     18          }
+   \   000014   1001         RETA
+   \   000016                REQUIRE _A_TB3CCR1_L
+   \   000016                REQUIRE _A_TB3CCR2_L
+   \   000016                REQUIRE _A_TB3CCR3_L
+   \   000016                REQUIRE _A_TB3CCR4_L
+     19          
+
+   \                                 In  segment CODE, align 2
+     20          void car_forward_medium(){
+   \                     car_forward_medium:
+     21            RIGHT_FORWARD_SPEED = RIGHT_MEDIUM;
+   \   000000   B24020035404 MOV.W   #0x320, &0x454
+     22            LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+   \   000006   B240EE025604 MOV.W   #0x2ee, &0x456
+     23            RIGHT_REVERSE_SPEED = STOP;
+   \   00000C   82435804     MOV.W   #0x0, &0x458
+     24            LEFT_REVERSE_SPEED = STOP;
+   \   000010   82435A04     MOV.W   #0x0, &0x45a
+     25          }
+   \   000014   1001         RETA
+   \   000016                REQUIRE _A_TB3CCR1_L
+   \   000016                REQUIRE _A_TB3CCR2_L
+   \   000016                REQUIRE _A_TB3CCR3_L
+   \   000016                REQUIRE _A_TB3CCR4_L
+     26          
+
+   \                                 In  segment CODE, align 2
+     27          void car_forward_fast(){
+   \                     car_forward_fast:
+     28            RIGHT_FORWARD_SPEED = RIGHT_FAST;
+   \   000000   B240E7035404 MOV.W   #0x3e7, &0x454
+     29            LEFT_FORWARD_SPEED = LEFT_FAST;
+   \   000006   B240E7035604 MOV.W   #0x3e7, &0x456
+     30            RIGHT_REVERSE_SPEED = STOP;
+   \   00000C   82435804     MOV.W   #0x0, &0x458
+     31            LEFT_REVERSE_SPEED = STOP;
+   \   000010   82435A04     MOV.W   #0x0, &0x45a
+     32          }
+   \   000014   1001         RETA
+   \   000016                REQUIRE _A_TB3CCR1_L
+   \   000016                REQUIRE _A_TB3CCR2_L
+   \   000016                REQUIRE _A_TB3CCR3_L
+   \   000016                REQUIRE _A_TB3CCR4_L
+     33          
+
+   \                                 In  segment CODE, align 2
+     34          void right_forward_slow(void){
+   \                     right_forward_slow:
+     35            RIGHT_REVERSE_SPEED = STOP;
+   \   000000   82435804     MOV.W   #0x0, &0x458
+     36            RIGHT_FORWARD_SPEED = RIGHT_SLOW;
+   \   000004   B24058025404 MOV.W   #0x258, &0x454
+     37          }
+   \   00000A   1001         RETA
+   \   00000C                REQUIRE _A_TB3CCR3_L
+   \   00000C                REQUIRE _A_TB3CCR1_L
+     38          
+
+   \                                 In  segment CODE, align 2
+     39          void right_forward_medium(void){
+   \                     right_forward_medium:
+     40            RIGHT_REVERSE_SPEED = STOP;
+   \   000000   82435804     MOV.W   #0x0, &0x458
+     41            RIGHT_FORWARD_SPEED = RIGHT_MEDIUM;
+   \   000004   B24020035404 MOV.W   #0x320, &0x454
+     42          }
+   \   00000A   1001         RETA
+   \   00000C                REQUIRE _A_TB3CCR3_L
+   \   00000C                REQUIRE _A_TB3CCR1_L
+     43          
+
+   \                                 In  segment CODE, align 2
+     44          void right_forward_fast(void){
+   \                     right_forward_fast:
+     45            RIGHT_REVERSE_SPEED = STOP;
+   \   000000   82435804     MOV.W   #0x0, &0x458
+     46            RIGHT_FORWARD_SPEED = RIGHT_FAST;
+   \   000004   B240E7035404 MOV.W   #0x3e7, &0x454
+     47          }
+   \   00000A   1001         RETA
+   \   00000C                REQUIRE _A_TB3CCR3_L
+   \   00000C                REQUIRE _A_TB3CCR1_L
+     48          
+
+   \                                 In  segment CODE, align 2
+     49          void left_forward_slow(void){
+   \                     left_forward_slow:
+     50            LEFT_REVERSE_SPEED = STOP;
+   \   000000   82435A04     MOV.W   #0x0, &0x45a
+     51            LEFT_FORWARD_SPEED = LEFT_SLOW;
+   \   000004   B24058025604 MOV.W   #0x258, &0x456
+     52          }
+   \   00000A   1001         RETA
+   \   00000C                REQUIRE _A_TB3CCR4_L
+   \   00000C                REQUIRE _A_TB3CCR2_L
+     53          
+
+   \                                 In  segment CODE, align 2
+     54          void left_forward_medium(void){
+   \                     left_forward_medium:
+     55            LEFT_REVERSE_SPEED = STOP;
+   \   000000   82435A04     MOV.W   #0x0, &0x45a
+     56            LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+   \   000004   B240EE025604 MOV.W   #0x2ee, &0x456
+     57          }
+   \   00000A   1001         RETA
+   \   00000C                REQUIRE _A_TB3CCR4_L
+   \   00000C                REQUIRE _A_TB3CCR2_L
+     58          
+
+   \                                 In  segment CODE, align 2
+     59          void left_forward_fast(void){
+   \                     left_forward_fast:
+     60            LEFT_REVERSE_SPEED = STOP;
+   \   000000   82435A04     MOV.W   #0x0, &0x45a
+     61            LEFT_FORWARD_SPEED = LEFT_FAST;
+   \   000004   B240E7035604 MOV.W   #0x3e7, &0x456
+     62          }
+   \   00000A   1001         RETA
+   \   00000C                REQUIRE _A_TB3CCR4_L
+   \   00000C                REQUIRE _A_TB3CCR2_L
+     63          
+
+   \                                 In  segment CODE, align 2
+     64          void move_clockwise(void){
+   \                     move_clockwise:
+     65            RIGHT_FORWARD_SPEED = STOP;
+   \   000000   82435404     MOV.W   #0x0, &0x454
+     66            LEFT_FORWARD_SPEED = LEFT_CLOCKWISE;
+   \   000004   B24052035604 MOV.W   #0x352, &0x456
+     67            RIGHT_REVERSE_SPEED = STOP;
+   \   00000A   82435804     MOV.W   #0x0, &0x458
+     68            LEFT_REVERSE_SPEED = STOP;
+   \   00000E   82435A04     MOV.W   #0x0, &0x45a
+     69          }
+   \   000012   1001         RETA
+   \   000014                REQUIRE _A_TB3CCR1_L
+   \   000014                REQUIRE _A_TB3CCR2_L
+   \   000014                REQUIRE _A_TB3CCR3_L
+   \   000014                REQUIRE _A_TB3CCR4_L
+
+   \                                 In  segment CODE, align 2
+     70          void move_clockwise_follow(void){
+   \                     move_clockwise_follow:
+     71            RIGHT_FORWARD_SPEED = STOP;
+   \   000000   82435404     MOV.W   #0x0, &0x454
+     72            LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+   \   000004   B240EE025604 MOV.W   #0x2ee, &0x456
+     73            RIGHT_REVERSE_SPEED = STOP;
+   \   00000A   82435804     MOV.W   #0x0, &0x458
+     74            LEFT_REVERSE_SPEED = STOP;
+   \   00000E   82435A04     MOV.W   #0x0, &0x45a
+     75          }
+   \   000012   1001         RETA
+   \   000014                REQUIRE _A_TB3CCR1_L
+   \   000014                REQUIRE _A_TB3CCR2_L
+   \   000014                REQUIRE _A_TB3CCR3_L
+   \   000014                REQUIRE _A_TB3CCR4_L
+     76          
+
+   \                                 In  segment CODE, align 2
+     77          void move_clockwise_slowly(void){
+   \                     move_clockwise_slowly:
+     78            RIGHT_FORWARD_SPEED = STOP;
+   \   000000   82435404     MOV.W   #0x0, &0x454
+     79            LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+   \   000004   B240EE025604 MOV.W   #0x2ee, &0x456
+     80            RIGHT_REVERSE_SPEED = STOP;
+   \   00000A   82435804     MOV.W   #0x0, &0x458
+     81            LEFT_REVERSE_SPEED = STOP;
+   \   00000E   82435A04     MOV.W   #0x0, &0x45a
+     82          }
+   \   000012   1001         RETA
+   \   000014                REQUIRE _A_TB3CCR1_L
+   \   000014                REQUIRE _A_TB3CCR2_L
+   \   000014                REQUIRE _A_TB3CCR3_L
+   \   000014                REQUIRE _A_TB3CCR4_L
+     83          
+
+   \                                 In  segment CODE, align 2
+     84          void move_counterclockwise_follow(void){
+   \                     move_counterclockwise_follow:
+     85            RIGHT_FORWARD_SPEED = RIGHT_MEDIUM;
+   \   000000   B24020035404 MOV.W   #0x320, &0x454
+     86            LEFT_FORWARD_SPEED = STOP;
+   \   000006   82435604     MOV.W   #0x0, &0x456
+     87            RIGHT_REVERSE_SPEED = STOP;
+   \   00000A   82435804     MOV.W   #0x0, &0x458
+     88            LEFT_REVERSE_SPEED = STOP;
+   \   00000E   82435A04     MOV.W   #0x0, &0x45a
+     89          }
+   \   000012   1001         RETA
+   \   000014                REQUIRE _A_TB3CCR1_L
+   \   000014                REQUIRE _A_TB3CCR2_L
+   \   000014                REQUIRE _A_TB3CCR3_L
+   \   000014                REQUIRE _A_TB3CCR4_L
+     90          
+
+   \                                 In  segment CODE, align 2
+     91          void move_counterclockwise(void){
+   \                     move_counterclockwise:
+     92            RIGHT_FORWARD_SPEED = RIGHT_COUNTERCLOCKWISE;;
+   \   000000   B24052035404 MOV.W   #0x352, &0x454
+     93            LEFT_FORWARD_SPEED = STOP;
+   \   000006   82435604     MOV.W   #0x0, &0x456
+     94            RIGHT_REVERSE_SPEED = STOP;
+   \   00000A   82435804     MOV.W   #0x0, &0x458
+     95            LEFT_REVERSE_SPEED = LEFT_COUNTERCLOCKWISE;
+   \   00000E   B240EE025A04 MOV.W   #0x2ee, &0x45a
+     96          }
+   \   000014   1001         RETA
+   \   000016                REQUIRE _A_TB3CCR1_L
+   \   000016                REQUIRE _A_TB3CCR2_L
+   \   000016                REQUIRE _A_TB3CCR3_L
+   \   000016                REQUIRE _A_TB3CCR4_L
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   car_forward_fast
+      4   car_forward_medium
+      4   car_forward_slow
+      4   left_forward_fast
+      4   left_forward_medium
+      4   left_forward_slow
+      4   move_clockwise
+      4   move_clockwise_follow
+      4   move_clockwise_slowly
+      4   move_counterclockwise
+      4   move_counterclockwise_follow
+      4   right_forward_fast
+      4   right_forward_medium
+      4   right_forward_slow
+      4   stop_car
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  _A_TB3CCR1_L
+       2  _A_TB3CCR2_L
+       2  _A_TB3CCR3_L
+       2  _A_TB3CCR4_L
+      22  car_forward_fast
+      22  car_forward_medium
+      22  car_forward_slow
+      12  left_forward_fast
+      12  left_forward_medium
+      12  left_forward_slow
+      20  move_clockwise
+      20  move_clockwise_follow
+      20  move_clockwise_slowly
+      22  move_counterclockwise
+      20  move_counterclockwise_follow
+      12  right_forward_fast
+      12  right_forward_medium
+      12  right_forward_slow
+      18  stop_car
+
+ 
+ 258 bytes in segment CODE
+   8 bytes in segment DATA16_AN
+ 
+ 258 bytes of CODE memory
+   0 bytes of DATA memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none

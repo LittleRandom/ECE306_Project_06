@@ -1,0 +1,517 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:13
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\update_display_state.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB63E.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\update_display_state.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\update_display_state.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\update_display_state.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\update_display_state.c
+      1          #include "macros.h"
+      2          #include <string.h>
+      3          #include "functions.h"
+      4          #include <stdlib.h>
+      5          #include <stdio.h>
+      6          
+      7          extern char display_line[NUM_OF_LINES][NUM_OF_CHARS];
+      8          extern char *display[NUM_OF_LINES];
+      9          extern volatile int display_code;
+     10          extern volatile unsigned long int display_counter;
+     11          extern volatile unsigned char display_changed;
+     12          extern volatile unsigned char update_display;
+     13          extern unsigned int debounce_count;
+     14          extern char display_thumb[NUM_OF_CHARS];
+     15          extern char display_IR_reading_R[NUM_OF_CHARS];
+     16          extern char display_IR_reading_L[NUM_OF_CHARS];
+     17          extern int movement_states;
+     18          extern volatile unsigned int clock;
+     19          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     20          int switch_toggle=RESET;
+   \                     switch_toggle:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     21          int movement_states=RESET;
+   \                     movement_states:
+   \   000000                DS8 2
+     22          extern int following_state;
+     23          
+     24          
+     25          extern int car_position;
+     26          extern int IR_LED_ONOFF;
+     27          
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     28          char T_thousands;
+   \                     T_thousands:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     29          char T_hundreds;
+   \                     T_hundreds:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     30          char T_tens;
+   \                     T_tens:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     31          char T_ones;
+   \                     T_ones:
+   \   000000                DS8 1
+     32          
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     33          char R_thousands;
+   \                     R_thousands:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     34          char R_hundreds;
+   \                     R_hundreds:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     35          char R_tens;
+   \                     R_tens:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     36          char R_ones;
+   \                     R_ones:
+   \   000000                DS8 1
+     37          
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     38          char L_thousands;
+   \                     L_thousands:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     39          char L_hundreds;
+   \                     L_hundreds:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     40          char L_tens;
+   \                     L_tens:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     41          char L_ones;
+   \                     L_ones:
+   \   000000                DS8 1
+     42          
+     43          extern char one_sec;
+     44          extern char ten_sec;
+     45          extern char hun_sec;
+     46          extern char hun_milli_sec;
+     47          
+
+   \                                 In  segment CODE, align 2
+     48          void update_display_state(void){
+   \                     update_display_state:
+     49            
+     50            convert_ADC();
+   \   000000   ........     CALLA   #convert_ADC
+     51            
+     52            if(IR_LED_ONOFF){
+   \   000004   8293....     CMP.W   #0x0, &IR_LED_ONOFF
+   \   000008   0D24         JEQ     ??update_display_state_7
+     53              display_thumb[CHAR3] = 'O';
+   \   00000A   F2404F00.... MOV.B   #0x4f, &display_thumb + 3
+     54              display_thumb[CHAR2] = ':';
+   \   000010   F2403A00.... MOV.B   #0x3a, &display_thumb + 2
+     55              display_thumb[CHAR1] = 'R';
+   \   000016   F2405200.... MOV.B   #0x52, &display_thumb + 1
+     56              display_thumb[CHAR0] = 'I';
+   \   00001C   F2404900.... MOV.B   #0x49, &display_thumb
+   \   000022   123C         JMP     ??update_display_state_6
+     57            } else {
+     58              display_thumb[CHAR5] = ' ';
+   \                     ??update_display_state_7:
+   \   000024   F2402000.... MOV.B   #0x20, &display_thumb + 5
+     59              display_thumb[CHAR4] = ' ';
+   \   00002A   F2402000.... MOV.B   #0x20, &display_thumb + 4
+     60              display_thumb[CHAR3] = 'X';
+   \   000030   F2405800.... MOV.B   #0x58, &display_thumb + 3
+     61              display_thumb[CHAR2] = ':';
+   \   000036   F2403A00.... MOV.B   #0x3a, &display_thumb + 2
+     62              display_thumb[CHAR1] = 'R';
+   \   00003C   F2405200.... MOV.B   #0x52, &display_thumb + 1
+     63              display_thumb[CHAR0] = 'I';
+   \   000042   F2404900.... MOV.B   #0x49, &display_thumb
+     64            }
+     65            
+     66            display_IR_reading_L[CHAR10] = RESET;
+   \                     ??update_display_state_6:
+   \   000048   C243....     MOV.B   #0x0, &display_IR_reading_L + 10
+     67            display_IR_reading_L[CHAR9] = L_ones;
+   \   00004C   D242........ MOV.B   &L_ones, &display_IR_reading_L + 9
+     68            display_IR_reading_L[CHAR8] = L_tens;
+   \   000052   D242........ MOV.B   &L_tens, &display_IR_reading_L + 8
+     69            display_IR_reading_L[CHAR7] = L_hundreds;
+   \   000058   D242........ MOV.B   &L_hundreds, &display_IR_reading_L + 7
+     70            display_IR_reading_L[CHAR6] = 'L';  
+   \   00005E   F2404C00.... MOV.B   #0x4c, &display_IR_reading_L + 6
+     71            display_IR_reading_L[CHAR5] = ' ';
+   \   000064   F2402000.... MOV.B   #0x20, &display_IR_reading_L + 5
+     72            display_IR_reading_L[CHAR4] = ' ';
+   \   00006A   F2402000.... MOV.B   #0x20, &display_IR_reading_L + 4
+     73            display_IR_reading_L[CHAR3] = R_ones;
+   \   000070   D242........ MOV.B   &R_ones, &display_IR_reading_L + 3
+     74            display_IR_reading_L[CHAR2] = R_tens;
+   \   000076   D242........ MOV.B   &R_tens, &display_IR_reading_L + 2
+     75            display_IR_reading_L[CHAR1] = R_hundreds;
+   \   00007C   D242........ MOV.B   &R_hundreds, &display_IR_reading_L + 1
+     76            display_IR_reading_L[CHAR0] = 'R';
+   \   000082   F2405200.... MOV.B   #0x52, &display_IR_reading_L
+     77            
+     78            display_thumb[CHAR10] = RESET;
+   \   000088   C243....     MOV.B   #0x0, &display_thumb + 10
+     79            display_thumb[CHAR9] = T_ones;
+   \   00008C   D242........ MOV.B   &T_ones, &display_thumb + 9
+     80            display_thumb[CHAR8] = T_tens;
+   \   000092   D242........ MOV.B   &T_tens, &display_thumb + 8
+     81            display_thumb[CHAR7] = T_hundreds;
+   \   000098   D242........ MOV.B   &T_hundreds, &display_thumb + 7
+     82            display_thumb[CHAR6] = T_thousands;  
+   \   00009E   D242........ MOV.B   &T_thousands, &display_thumb + 6
+     83            display_thumb[CHAR5] = ' ';
+   \   0000A4   F2402000.... MOV.B   #0x20, &display_thumb + 5
+     84            display_thumb[CHAR4] = ' ';
+   \   0000AA   F2402000.... MOV.B   #0x20, &display_thumb + 4
+     85            
+     86            display_IR_reading_R[CHAR10] = RESET;
+   \   0000B0   C243....     MOV.B   #0x0, &display_IR_reading_R + 10
+     87            display_IR_reading_R[CHAR9] = hun_milli_sec;
+   \   0000B4   D242........ MOV.B   &hun_milli_sec, &display_IR_reading_R + 9
+     88            display_IR_reading_R[CHAR8] = '.';
+   \   0000BA   F2402E00.... MOV.B   #0x2e, &display_IR_reading_R + 8
+     89            display_IR_reading_R[CHAR7] = one_sec;
+   \   0000C0   D242........ MOV.B   &one_sec, &display_IR_reading_R + 7
+     90            display_IR_reading_R[CHAR6] = ten_sec;  
+   \   0000C6   D242........ MOV.B   &ten_sec, &display_IR_reading_R + 6
+     91            display_IR_reading_R[CHAR5] = hun_sec;
+   \   0000CC   D242........ MOV.B   &hun_sec, &display_IR_reading_R + 5
+     92            display_IR_reading_R[CHAR4] = '=';
+   \   0000D2   F2403D00.... MOV.B   #0x3d, &display_IR_reading_R + 4
+     93            display_IR_reading_R[CHAR3] = 'E';
+   \   0000D8   F2404500.... MOV.B   #0x45, &display_IR_reading_R + 3
+     94            display_IR_reading_R[CHAR2] = 'M';
+   \   0000DE   F2404D00.... MOV.B   #0x4d, &display_IR_reading_R + 2
+     95            display_IR_reading_R[CHAR1] = 'I';
+   \   0000E4   F2404900.... MOV.B   #0x49, &display_IR_reading_R + 1
+     96            display_IR_reading_R[CHAR0] = 'T';
+   \   0000EA   F2405400.... MOV.B   #0x54, &display_IR_reading_R
+     97            
+     98            update_string(display_IR_reading_R, LCD_LINE_3);
+   \   0000F0   3D400300     MOV.W   #0x3, R13
+   \   0000F4   3C40....     MOV.W   #display_IR_reading_R, R12
+   \   0000F8   ........     CALLA   #update_string
+     99            
+    100            update_string(display_thumb, LCD_LINE_1);
+   \   0000FC   1D43         MOV.W   #0x1, R13
+   \   0000FE   3C40....     MOV.W   #display_thumb, R12
+   \   000102   ........     CALLA   #update_string
+    101            
+    102            update_string(display_IR_reading_L, LCD_LINE_2);
+   \   000106   2D43         MOV.W   #0x2, R13
+   \   000108   3C40....     MOV.W   #display_IR_reading_L, R12
+   \   00010C   ........     CALLA   #update_string
+    103            
+    104            switch(movement_states){
+   \   000110   1F42....     MOV.W   &movement_states, R15
+   \   000114   0F83         SUB.W   #0x0, R15
+   \   000116   0E24         JEQ     ??update_display_state_8
+   \   000118   1F83         SUB.W   #0x1, R15
+   \   00011A   1224         JEQ     ??update_display_state_9
+   \   00011C   1F83         SUB.W   #0x1, R15
+   \   00011E   1624         JEQ     ??update_display_state_10
+   \   000120   1F83         SUB.W   #0x1, R15
+   \   000122   1A24         JEQ     ??update_display_state_11
+   \   000124   3F800300     SUB.W   #0x3, R15
+   \   000128   1D24         JEQ     ??update_display_state_12
+   \   00012A   2F82         SUB.W   #0x4, R15
+   \   00012C   4724         JEQ     ??update_display_state_13
+   \   00012E   1F83         SUB.W   #0x1, R15
+   \   000130   3224         JEQ     ??update_display_state_14
+   \   000132   493C         JMP     ??update_display_state_1
+    105            case HOLD:
+    106              update_string( "   HOLD   ", LCD_LINE_0);
+   \                     ??update_display_state_8:
+   \   000134   0D43         MOV.W   #0x0, R13
+   \   000136   3C40....     MOV.W   #`?<Constant "   HOLD   ">`, R12
+   \   00013A   ........     CALLA   #update_string
+    107              break;
+   \   00013E   433C         JMP     ??update_display_state_1
+    108            case MOVE:
+    109              update_string("    GO    ", LCD_LINE_0);
+   \                     ??update_display_state_9:
+   \   000140   0D43         MOV.W   #0x0, R13
+   \   000142   3C40....     MOV.W   #`?<Constant "    GO    ">`, R12
+   \   000146   ........     CALLA   #update_string
+    110              break;
+   \   00014A   3D3C         JMP     ??update_display_state_1
+    111            case BLACKLINE:
+    112              update_string("BLACKLINE ", LCD_LINE_0);
+   \                     ??update_display_state_10:
+   \   00014C   0D43         MOV.W   #0x0, R13
+   \   00014E   3C40....     MOV.W   #`?<Constant "BLACKLINE ">`, R12
+   \   000152   ........     CALLA   #update_string
+    113              break;
+   \   000156   373C         JMP     ??update_display_state_1
+    114            case ON_BLACKLINE:
+    115              update_string("POSITIONED", LCD_LINE_0);
+   \                     ??update_display_state_11:
+   \   000158   0D43         MOV.W   #0x0, R13
+   \   00015A   3C40....     MOV.W   #`?<Constant "POSITIONED">`, R12
+   \   00015E   ........     CALLA   #update_string
+    116              break;
+   \   000162   313C         JMP     ??update_display_state_1
+    117            case FOLLOW_BLACKLINE:
+    118              if(car_position == LB_RW){     
+   \                     ??update_display_state_12:
+   \   000164   B2900300.... CMP.W   #0x3, &car_position
+   \   00016A   0620         JNE     ??update_display_state_15
+    119                update_string("LBLK RWHT ", LCD_LINE_0);
+   \   00016C   0D43         MOV.W   #0x0, R13
+   \   00016E   3C40....     MOV.W   #`?<Constant "LBLK RWHT ">`, R12
+   \   000172   ........     CALLA   #update_string
+   \   000176   273C         JMP     ??update_display_state_1
+    120              } else if(car_position == LW_RB){
+   \                     ??update_display_state_15:
+   \   000178   A293....     CMP.W   #0x2, &car_position
+   \   00017C   0620         JNE     ??update_display_state_16
+    121                update_string("LWHT RBLK ", LCD_LINE_0);
+   \   00017E   0D43         MOV.W   #0x0, R13
+   \   000180   3C40....     MOV.W   #`?<Constant "LWHT RBLK ">`, R12
+   \   000184   ........     CALLA   #update_string
+   \   000188   1E3C         JMP     ??update_display_state_1
+    122              } else {
+    123                update_string("  NEITHER ", LCD_LINE_0);
+   \                     ??update_display_state_16:
+   \   00018A   0D43         MOV.W   #0x0, R13
+   \   00018C   3C40....     MOV.W   #`?<Constant "  NEITHER ">`, R12
+   \   000190   ........     CALLA   #update_string
+    124              }
+    125              break;
+   \   000194   183C         JMP     ??update_display_state_1
+    126            case FOLLOW_DONE:
+    127              switch(following_state){
+   \                     ??update_display_state_14:
+   \   000196   1F42....     MOV.W   &following_state, R15
+   \   00019A   3F800500     SUB.W   #0x5, R15
+   \   00019E   0824         JEQ     ??update_display_state_17
+   \   0001A0   2F83         SUB.W   #0x2, R15
+   \   0001A2   1120         JNE     ??update_display_state_1
+    128              case TURN_90:
+    129                update_string("TURNING 90", LCD_LINE_0);
+   \   0001A4   0D43         MOV.W   #0x0, R13
+   \   0001A6   3C40....     MOV.W   #`?<Constant "TURNING 90">`, R12
+   \   0001AA   ........     CALLA   #update_string
+    130                break;     
+   \   0001AE   0B3C         JMP     ??update_display_state_1
+    131              case MOVE_TO_MIDDLE:
+    132                update_string("MOVE2MIDDL", LCD_LINE_0);
+   \                     ??update_display_state_17:
+   \   0001B0   0D43         MOV.W   #0x0, R13
+   \   0001B2   3C40....     MOV.W   #`?<Constant "MOVE2MIDDL">`, R12
+   \   0001B6   ........     CALLA   #update_string
+    133                break;
+    134              }
+    135              break;
+   \   0001BA   053C         JMP     ??update_display_state_1
+    136            case PROJECT_7_FINISHED:
+    137                update_string("PROJ7FIN. ", LCD_LINE_0);
+   \                     ??update_display_state_13:
+   \   0001BC   0D43         MOV.W   #0x0, R13
+   \   0001BE   3C40....     MOV.W   #`?<Constant "PROJ7FIN. ">`, R12
+   \   0001C2   ........     CALLA   #update_string
+    138              break;
+    139            }
+    140            
+    141            switch(display_counter){
+   \                     ??update_display_state_1:
+   \   0001C6   1E42....     MOV.W   &display_counter, R14
+   \   0001CA   1F42....     MOV.W   &display_counter + 2, R15
+   \   0001CE   0E93         CMP.W   #0x0, R14
+   \   0001D0   0220         JNE     ??update_display_state_18
+   \   0001D2   0F93         CMP.W   #0x0, R15
+   \   0001D4   0B24         JEQ     ??update_display_state_19
+   \                     ??update_display_state_18:
+   \   0001D6   3E901400     CMP.W   #0x14, R14
+   \   0001DA   0C20         JNE     ??update_display_state_5
+   \   0001DC   0F93         CMP.W   #0x0, R15
+   \   0001DE   0124         JEQ     ??update_display_state_20
+   \   0001E0   1001         RETA
+    142            case HUNDRED_MS:
+    143              display_counter = RESET;
+   \                     ??update_display_state_20:
+   \   0001E2   8243....     MOV.W   #0x0, &display_counter
+   \   0001E6   8243....     MOV.W   #0x0, &display_counter + 2
+    144              break;
+   \   0001EA   1001         RETA
+    145            case RESET:
+    146              update_display = CHANGE_DISPLAY_ON ;
+   \                     ??update_display_state_19:
+   \   0001EC   D243....     MOV.B   #0x1, &update_display
+    147              display_changed = CHANGE_DISPLAY_ON;
+   \   0001F0   D243....     MOV.B   #0x1, &display_changed
+    148              break;
+    149            }
+    150            
+    151            
+    152          }
+   \                     ??update_display_state_5:
+   \   0001F4   1001         RETA
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   HOLD   ">`:
+   \   000000   202020484F4C DC8 "   HOLD   "
+   \            4420202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "    GO    ">`:
+   \   000000   20202020474F DC8 "    GO    "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "BLACKLINE ">`:
+   \   000000   424C41434B4C DC8 "BLACKLINE "
+   \            494E452000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "POSITIONED">`:
+   \   000000   504F53495449 DC8 "POSITIONED"
+   \            4F4E454400  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "LBLK RWHT ">`:
+   \   000000   4C424C4B2052 DC8 "LBLK RWHT "
+   \            5748542000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "LWHT RBLK ">`:
+   \   000000   4C5748542052 DC8 "LWHT RBLK "
+   \            424C4B2000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "  NEITHER ">`:
+   \   000000   20204E454954 DC8 "  NEITHER "
+   \            4845522000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "TURNING 90">`:
+   \   000000   5455524E494E DC8 "TURNING 90"
+   \            4720393000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "MOVE2MIDDL">`:
+   \   000000   4D4F5645324D DC8 "MOVE2MIDDL"
+   \            4944444C00  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "PROJ7FIN. ">`:
+   \   000000   50524F4A3746 DC8 "PROJ7FIN. "
+   \            494E2E2000  
+    153          
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   update_display_state
+        4   -> convert_ADC
+        4   -> update_string
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      11  ?<Constant "    GO    ">
+      11  ?<Constant "   HOLD   ">
+      11  ?<Constant "  NEITHER ">
+      11  ?<Constant "BLACKLINE ">
+      11  ?<Constant "LBLK RWHT ">
+      11  ?<Constant "LWHT RBLK ">
+      11  ?<Constant "MOVE2MIDDL">
+      11  ?<Constant "POSITIONED">
+      11  ?<Constant "PROJ7FIN. ">
+      11  ?<Constant "TURNING 90">
+       1  L_hundreds
+       1  L_ones
+       1  L_tens
+       1  L_thousands
+       1  R_hundreds
+       1  R_ones
+       1  R_tens
+       1  R_thousands
+       1  T_hundreds
+       1  T_ones
+       1  T_tens
+       1  T_thousands
+       2  movement_states
+       2  switch_toggle
+     502  update_display_state
+
+ 
+ 502 bytes in segment CODE
+ 110 bytes in segment DATA16_C
+  16 bytes in segment DATA16_Z
+ 
+ 502 bytes of CODE  memory
+ 110 bytes of CONST memory
+  16 bytes of DATA  memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,248 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:13
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\interrupts_ADC.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB2D7.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\interrupts_ADC.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\interrupts_ADC.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\interrupts_ADC.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\interrupts_ADC.c
+      1          #include "macros.h"
+      2          #include "functions.h"
+      3          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x700
+   \   union <unnamed> _A_ADCCTL0_L
+   \                     _A_ADCCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x70a
+   \   union <unnamed> _A_ADCMCTL0_L
+   \                     _A_ADCMCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x712
+   \   union <unnamed> _A_ADCMEM0_L
+   \                     _A_ADCMEM0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x71e
+   \   union <unnamed> _A_ADCIV_L
+   \                     _A_ADCIV_L:
+   \   000000                DS8 2
+      4          #include "msp430fr2355.h"
+      5          
+      6          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      7          int ADC_Channel = RESET;
+   \                     ADC_Channel:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      8          volatile int ADC_Thumb = RESET;
+   \                     ADC_Thumb:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      9          volatile int ADC_Left_Detect = RESET;
+   \                     ADC_Left_Detect:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     10          volatile int ADC_Right_Detect = RESET;
+   \                     ADC_Right_Detect:
+   \   000000                DS8 2
+     11          
+     12          #pragma vector=ADC_VECTOR
+
+   \                                 In  segment ISR_CODE, align 2
+     13          __interrupt void penis(void){
+   \                     penis:
+   \   000000   1F15         PUSHM.W #0x2, R15
+     14            switch(__even_in_range(ADCIV,ADCIV_ADCIFG)){
+   \   000002   1F421E07     MOV.W   &0x71e, R15
+   \   000006   E00F         ADDA    R15, PC
+   \                     `?<Jumptable for penis>_0`:
+   \   000008   433C         JMP     ??penis_1
+   \   00000A   423C         JMP     ??penis_1
+   \   00000C   413C         JMP     ??penis_1
+   \   00000E   403C         JMP     ??penis_1
+   \   000010   3F3C         JMP     ??penis_1
+   \   000012   3E3C         JMP     ??penis_1
+   \   000014   003C         JMP     ??penis_6
+     15            case ADCIV_NONE:
+     16              break;
+     17            case ADCIV_ADCOVIFG: // When a conversion result is written to the ADCMEM0
+     18              // before its previous conversion result was read.
+     19              break;
+     20            case ADCIV_ADCTOVIFG:                          // ADC conversion-time overflow
+     21              break;
+     22            case ADCIV_ADCHIIFG:                           // Window comparator interrupt flags
+     23              break;
+     24            case ADCIV_ADCLOIFG:                           // Window comparator interrupt flag
+     25              break;
+     26            case ADCIV_ADCINIFG:                           // Window comparator interrupt flag
+     27              break;
+     28              
+     29            case ADCIV_ADCIFG: // ADCMEM0 memory register with the conversion result
+     30              
+     31              ADCCTL0 &= ~ADCENC; // Disable ENC bit.
+   \                     ??penis_6:
+   \   000016   A2C30007     BIC.W   #0x2, &0x700
+     32              
+     33              switch (ADC_Channel++){
+   \   00001A   1F42....     MOV.W   &ADC_Channel, R15
+   \   00001E   0E4F         MOV.W   R15, R14
+   \   000020   1E53         ADD.W   #0x1, R14
+   \   000022   824E....     MOV.W   R14, &ADC_Channel
+   \   000026   0F83         SUB.W   #0x0, R15
+   \   000028   0724         JEQ     ??penis_2
+   \   00002A   1F83         SUB.W   #0x1, R15
+   \   00002C   1224         JEQ     ??penis_3
+   \   00002E   1F83         SUB.W   #0x1, R15
+   \   000030   1E24         JEQ     ??penis_4
+   \   000032   1F83         SUB.W   #0x1, R15
+   \   000034   2924         JEQ     ??penis_5
+   \   000036   2A3C         JMP     ??penis_0
+     34              case THUMB: // Channel A2 Interrupt
+     35                ADCMCTL0 &= ~ADCINCH_2; // enabled Last channel A2
+   \                     ??penis_2:
+   \   000038   A2C30A07     BIC.W   #0x2, &0x70a
+     36                ADC_Left_Detect = ADCMEM0 >> DIVIDE4; // Move result into Global
+   \   00003C   1F421207     MOV.W   &0x712, R15
+   \   000040   5F07         RRUM.W  #0x2, R15
+   \   000042   824F....     MOV.W   R15, &ADC_Left_Detect
+     37                ADCMCTL0 |= ADCINCH_3; // Enable Next channel A3
+   \   000046   B2D003000A07 BIS.W   #0x3, &0x70a
+     38                ADCCTL0 |= ADCSC; // Start next sample
+   \   00004C   92D30007     BIS.W   #0x1, &0x700
+     39                break;
+   \   000050   1D3C         JMP     ??penis_0
+     40              case LEFT_IR_DETECT: // Channel A2 Interrupt
+     41                ADCMCTL0 &= ~ADCINCH_3; // Enable Next channel A3
+   \                     ??penis_3:
+   \   000052   B2F0FCFF0A07 AND.W   #0xfffc, &0x70a
+     42                ADC_Right_Detect = ADCMEM0 >> DIVIDE4; // Move result into Global
+   \   000058   1F421207     MOV.W   &0x712, R15
+   \   00005C   5F07         RRUM.W  #0x2, R15
+   \   00005E   824F....     MOV.W   R15, &ADC_Right_Detect
+     43                ADCMCTL0 |= ADCINCH_5; // Enable Next channel A5
+   \   000062   B2D005000A07 BIS.W   #0x5, &0x70a
+     44                ADCCTL0 |= ADCSC; // Start next sample
+   \   000068   92D30007     BIS.W   #0x1, &0x700
+     45                break;
+   \   00006C   0F3C         JMP     ??penis_0
+     46              case RIGHT_IR_DETECT:
+     47                ADCMCTL0 &= ~ADCINCH_5;
+   \                     ??penis_4:
+   \   00006E   B2F0FAFF0A07 AND.W   #0xfffa, &0x70a
+     48                ADC_Thumb = ADCMEM0 >> DIVIDE4; // Channel A5
+   \   000074   1F421207     MOV.W   &0x712, R15
+   \   000078   5F07         RRUM.W  #0x2, R15
+   \   00007A   824F....     MOV.W   R15, &ADC_Thumb
+     49                ADCMCTL0 |= ADCINCH_2;
+   \   00007E   A2D30A07     BIS.W   #0x2, &0x70a
+     50                ADCCTL0 |= ADCSC; // Start next sample
+   \   000082   92D30007     BIS.W   #0x1, &0x700
+     51                break;
+   \   000086   023C         JMP     ??penis_0
+     52              case RESETADC:
+     53                ADC_Channel=RESET;
+   \                     ??penis_5:
+   \   000088   8243....     MOV.W   #0x0, &ADC_Channel
+     54              default:
+     55                break;
+     56              }
+     57              
+     58              ADCCTL0 |= ADCENC; // Enable Conversions
+   \                     ??penis_0:
+   \   00008C   A2D30007     BIS.W   #0x2, &0x700
+     59              
+     60            default:
+     61              break;
+     62            }
+     63          }
+   \                     ??penis_1:
+   \   000090   1E17         POPM.W  #0x2, R15
+   \   000092   0013         RETI
+   \   000094                REQUIRE _A_ADCCTL0_L
+   \   000094                REQUIRE _A_ADCMCTL0_L
+   \   000094                REQUIRE _A_ADCMEM0_L
+   \   000094                REQUIRE _A_ADCIV_L
+
+   \                                 In  segment INTVEC, offset 0x3a, root
+   \                     `??penis::??INTVEC 58`:
+   \   00003A   ....         DC16    penis
+     64          
+     65          
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      8   penis
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  ADC_Channel
+       2  ADC_Left_Detect
+       2  ADC_Right_Detect
+       2  ADC_Thumb
+       2  _A_ADCCTL0_L
+       2  _A_ADCIV_L
+       2  _A_ADCMCTL0_L
+       2  _A_ADCMEM0_L
+     148  penis
+       2  penis::??INTVEC 58
+
+ 
+   8 bytes in segment DATA16_AN
+   8 bytes in segment DATA16_Z
+   2 bytes in segment INTVEC
+ 148 bytes in segment ISR_CODE
+ 
+ 148 bytes of CODE  memory
+   0 bytes of CONST memory (+ 2 bytes shared)
+   8 bytes of DATA  memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none

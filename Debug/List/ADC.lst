@@ -1,0 +1,162 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           27/Feb/2020  17:38:51
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\ADC.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWBD92.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\ADC.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\ADC.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\ADC.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\ADC.c
+      1          #include "macros.h"
+      2          #include "functions.h"
+      3          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x700
+   \   union <unnamed> _A_ADCCTL0_L
+   \                     _A_ADCCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x702
+   \   union <unnamed> _A_ADCCTL1_L
+   \                     _A_ADCCTL1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x704
+   \   union <unnamed> _A_ADCCTL2_L
+   \                     _A_ADCCTL2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x70a
+   \   union <unnamed> _A_ADCMCTL0_L
+   \                     _A_ADCMCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x71a
+   \   union <unnamed> _A_ADCIE_L
+   \                     _A_ADCIE_L:
+   \   000000                DS8 2
+      4          #include "msp430fr2355.h"
+      5          
+
+   \                                 In  segment CODE, align 2
+      6          void Init_ADC(void){
+   \                     Init_ADC:
+      7          
+      8          // ADCCTL0 Register
+      9          ADCCTL0 = RESET; // Reset
+   \   000000   82430007     MOV.W   #0x0, &0x700
+     10          ADCCTL0 |= ADCSHT_2; // 16 ADC clocks
+   \   000004   B2D000020007 BIS.W   #0x200, &0x700
+     11          ADCCTL0 |= ADCMSC; // MSC
+   \   00000A   B2D080000007 BIS.W   #0x80, &0x700
+     12          ADCCTL0 |= ADCON; // ADC ON
+   \   000010   B2D010000007 BIS.W   #0x10, &0x700
+     13          
+     14          // ADCCTL1 Register
+     15          ADCCTL2 = RESET; // Reset
+   \   000016   82430407     MOV.W   #0x0, &0x704
+     16          ADCCTL1 |= ADCSHS_0; // 00b = ADCSC bit
+   \   00001A   924202070207 MOV.W   &0x702, &0x702
+     17          ADCCTL1 |= ADCSHP; // ADC sample-and-hold SAMPCON signal from sampling timer.
+   \   000020   B2D000020207 BIS.W   #0x200, &0x702
+     18          ADCCTL1 &= ~ADCISSH; // ADC invert signal sample-and-hold.
+   \   000026   B2C000010207 BIC.W   #0x100, &0x702
+     19          ADCCTL1 |= ADCDIV_0; // ADC clock divider - 000b = Divide by 1
+   \   00002C   924202070207 MOV.W   &0x702, &0x702
+     20          ADCCTL1 |= ADCSSEL_0; // ADC clock MODCLK
+   \   000032   924202070207 MOV.W   &0x702, &0x702
+     21          ADCCTL1 |= ADCCONSEQ_0; // ADC conversion sequence 00b = Single-channel single-conversion
+   \   000038   924202070207 MOV.W   &0x702, &0x702
+     22          // ADCCTL1 & ADCBUSY identifies a conversion is in process
+     23          
+     24          // ADCCTL2 Register
+     25          ADCCTL2 = RESET; // Reset
+   \   00003E   82430407     MOV.W   #0x0, &0x704
+     26          ADCCTL2 |= ADCPDIV0; // ADC pre-divider 00b = Pre-divide by 1
+   \   000042   B2D000010407 BIS.W   #0x100, &0x704
+     27          ADCCTL2 |= ADCRES_2; // ADC resolution 10b = 12 bit (14 clock cycle conversion time)
+   \   000048   B2D020000407 BIS.W   #0x20, &0x704
+     28          ADCCTL2 &= ~ADCDF; // ADC data read-back format 0b = Binary unsigned.
+   \   00004E   B2C20407     BIC.W   #0x8, &0x704
+     29          ADCCTL2 &= ~ADCSR; // ADC sampling rate 0b = ADC buffer supports up to 200 ksps
+   \   000052   A2C20407     BIC.W   #0x4, &0x704
+     30          
+     31          // ADCMCTL0 Register
+     32          ADCMCTL0 |= ADCSREF_0; // VREF - 000b = {VR+ = AVCC and VR– = AVSS }
+   \   000056   92420A070A07 MOV.W   &0x70a, &0x70a
+     33          ADCMCTL0 |= ADCINCH_2; // V_THUMB (0x20) Pin 5 A5
+   \   00005C   A2D30A07     BIS.W   #0x2, &0x70a
+     34          
+     35          ADCIE |= ADCIE0; // Enable ADC conv complete interrupt
+   \   000060   92D31A07     BIS.W   #0x1, &0x71a
+     36          ADCCTL0 |= ADCENC; // ADC enable conversion.
+   \   000064   A2D30007     BIS.W   #0x2, &0x700
+     37          ADCCTL0 |= ADCSC; // ADC start conversion.
+   \   000068   92D30007     BIS.W   #0x1, &0x700
+     38          
+     39          }
+   \   00006C   1001         RETA
+   \   00006E                REQUIRE _A_ADCCTL0_L
+   \   00006E                REQUIRE _A_ADCCTL2_L
+   \   00006E                REQUIRE _A_ADCCTL1_L
+   \   00006E                REQUIRE _A_ADCMCTL0_L
+   \   00006E                REQUIRE _A_ADCIE_L
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   Init_ADC
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     110  Init_ADC
+       2  _A_ADCCTL0_L
+       2  _A_ADCCTL1_L
+       2  _A_ADCCTL2_L
+       2  _A_ADCIE_L
+       2  _A_ADCMCTL0_L
+
+ 
+ 110 bytes in segment CODE
+  10 bytes in segment DATA16_AN
+ 
+ 110 bytes of CODE memory
+   0 bytes of DATA memory (+ 10 bytes shared)
+
+Errors: none
+Warnings: none

@@ -1,0 +1,239 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           20/Feb/2020  18:24:02
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 06\project_5_main_code.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EW6683.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 06\project_5_main_code.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 06\Debug\List\project_5_main_code.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 06\Debug\Obj\project_5_main_code.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Homework\Homework 06\project_5_main_code.c
+      1          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x242
+   \   union <unnamed> _A_PCOUT_L
+   \                     _A_PCOUT_L:
+   \   000000                DS8 2
+      2          #include "msp430fr2355.h"
+      3          #include "macros.h"
+      4          #include "functions.h"
+      5          
+      6          extern volatile unsigned long int Time_Sequence;
+      7          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      8          unsigned volatile int display_code = RESET;
+   \                     display_code:
+   \   000000                DS8 2
+      9          
+
+   \                                 In  segment CODE, align 2
+     10          void project_5_main_code(void){
+   \                     project_5_main_code:
+     11            
+     12               switch(Time_Sequence){
+   \   000000   1E42....     MOV.W   &Time_Sequence, R14
+   \   000004   1F42....     MOV.W   &Time_Sequence + 2, R15
+   \   000008   0F83         SUB.W   #0x0, R15
+   \   00000A   6C20         JNE     ??project_5_main_code_1
+   \   00000C   3E80C800     SUB.W   #0xc8, R14
+   \   000010   6324         JEQ     ??project_5_main_code_3
+   \   000012   3E80C800     SUB.W   #0xc8, R14
+   \   000016   5924         JEQ     ??project_5_main_code_4
+   \   000018   3E80C800     SUB.W   #0xc8, R14
+   \   00001C   4F24         JEQ     ??project_5_main_code_5
+   \   00001E   3E809001     SUB.W   #0x190, R14
+   \   000022   4524         JEQ     ??project_5_main_code_6
+   \   000024   3E80C800     SUB.W   #0xc8, R14
+   \   000028   3B24         JEQ     ??project_5_main_code_7
+   \   00002A   3E80C800     SUB.W   #0xc8, R14
+   \   00002E   3124         JEQ     ??project_5_main_code_8
+   \   000030   3E80C800     SUB.W   #0xc8, R14
+   \   000034   2624         JEQ     ??project_5_main_code_9
+   \   000036   3E805802     SUB.W   #0x258, R14
+   \   00003A   1C24         JEQ     ??project_5_main_code_10
+   \   00003C   3E809001     SUB.W   #0x190, R14
+   \   000040   1224         JEQ     ??project_5_main_code_11
+   \   000042   3E805802     SUB.W   #0x258, R14
+   \   000046   0824         JEQ     ??project_5_main_code_12
+   \   000048   3E80C800     SUB.W   #0xc8, R14
+   \   00004C   4B20         JNE     ??project_5_main_code_1
+     13              
+     14            case SEVENTEENSECOND:       // RESET
+     15              Time_Sequence = RESET;
+   \   00004E   8243....     MOV.W   #0x0, &Time_Sequence
+   \   000052   8243....     MOV.W   #0x0, &Time_Sequence + 2
+     16              break;
+   \   000056   1001         RETA
+     17              
+     18            case SIXTEENSECOND:         // STOP @ SECOND : 16
+     19              P6OUT &= ~ R_FORWARD;     // STOP FOR 2 SECONDS
+   \                     ??project_5_main_code_12:
+   \   000058   D2C34302     BIC.B   #0x1, &0x243
+     20              P6OUT &= ~ L_REVERSE;
+   \   00005C   F2C24302     BIC.B   #0x8, &0x243
+     21              display_code = STOP;
+   \   000060   9243....     MOV.W   #0x1, &display_code
+     22              break; 
+   \   000064   1001         RETA
+     23              
+     24            case THIRTEENSECOND:        // SPIN CC @ SECOND : 13
+     25              P6OUT |= R_FORWARD;       // SPIN COUNTER-CLOCKWISE FOR 3 SECONDS
+   \                     ??project_5_main_code_11:
+   \   000066   D2D34302     BIS.B   #0x1, &0x243
+     26              P6OUT |= L_REVERSE;
+   \   00006A   F2D24302     BIS.B   #0x8, &0x243
+     27              display_code = COUNTER_CLOCKWISE;
+   \   00006E   B242....     MOV.W   #0x8, &display_code
+     28              break;
+   \   000072   1001         RETA
+     29              
+     30            case ELEVENSECOND:          // STOP @ SECOND : 11
+     31              P6OUT &= ~ R_REVERSE;     // STOP FOR 2 SECONDS
+   \                     ??project_5_main_code_10:
+   \   000074   E2C24302     BIC.B   #0x4, &0x243
+     32              P6OUT &= ~ L_FORWARD;
+   \   000078   E2C34302     BIC.B   #0x2, &0x243
+     33              display_code = STOP;
+   \   00007C   9243....     MOV.W   #0x1, &display_code
+     34              break;
+   \   000080   1001         RETA
+     35              
+     36            case EIGHTSECOND:           // SPIN C @ SECOND: 8
+     37              P6OUT |= R_REVERSE;       // SPIN CLOCKWISE FOR 3 SECONDS
+   \                     ??project_5_main_code_9:
+   \   000082   E2D24302     BIS.B   #0x4, &0x243
+     38              P6OUT |= L_FORWARD;
+   \   000086   E2D34302     BIS.B   #0x2, &0x243
+     39              display_code = CLOCKWISE;
+   \   00008A   B2400600.... MOV.W   #0x6, &display_code
+     40              break;
+   \   000090   1001         RETA
+     41              
+     42            case SEVENSECOND:             
+     43              P6OUT &= ~ L_FORWARD;     // STOP @ SECOND : 7
+   \                     ??project_5_main_code_8:
+   \   000092   E2C34302     BIC.B   #0x2, &0x243
+     44              P6OUT &= ~ R_FORWARD;     // STOP FOR 1 SECOND
+   \   000096   D2C34302     BIC.B   #0x1, &0x243
+     45              display_code = STOP;
+   \   00009A   9243....     MOV.W   #0x1, &display_code
+     46              break;
+   \   00009E   1001         RETA
+     47              
+     48            case SIXSECOND:             // FORWARD @ SECOND : 6
+     49              P6OUT |= R_FORWARD;       // FORWARD FOR 1 SECOND
+   \                     ??project_5_main_code_7:
+   \   0000A0   D2D34302     BIS.B   #0x1, &0x243
+     50              P6OUT |= L_FORWARD;
+   \   0000A4   E2D34302     BIS.B   #0x2, &0x243
+     51              display_code = FORWARD;
+   \   0000A8   A243....     MOV.W   #0x2, &display_code
+     52              break;
+   \   0000AC   1001         RETA
+     53              
+     54            case FIVESECOND:            // STOP @ SECOND : 5
+     55              P6OUT &= ~R_REVERSE;      // STOP FOR 1 SECOND
+   \                     ??project_5_main_code_6:
+   \   0000AE   E2C24302     BIC.B   #0x4, &0x243
+     56              P6OUT &= ~L_REVERSE;
+   \   0000B2   F2C24302     BIC.B   #0x8, &0x243
+     57              display_code = STOP;
+   \   0000B6   9243....     MOV.W   #0x1, &display_code
+     58              break; 
+   \   0000BA   1001         RETA
+     59              
+     60            case THREESECOND:           // REVERSE @ SECOND : 3
+     61              P6OUT |= L_REVERSE;       // REVERSE FOR 2 SECONDS
+   \                     ??project_5_main_code_5:
+   \   0000BC   F2D24302     BIS.B   #0x8, &0x243
+     62              P6OUT |= R_REVERSE;
+   \   0000C0   E2D24302     BIS.B   #0x4, &0x243
+     63              display_code = REVERSE;
+   \   0000C4   A242....     MOV.W   #0x4, &display_code
+     64              break;
+   \   0000C8   1001         RETA
+     65              
+     66            case TWOSECOND:
+     67              P6OUT &= ~ R_FORWARD;     // STOP @ SECOND : 2
+   \                     ??project_5_main_code_4:
+   \   0000CA   D2C34302     BIC.B   #0x1, &0x243
+     68              P6OUT &= ~ L_FORWARD;     // STOP FOR 1 SECOND
+   \   0000CE   E2C34302     BIC.B   #0x2, &0x243
+     69              display_code = STOP;
+   \   0000D2   9243....     MOV.W   #0x1, &display_code
+     70              break;
+   \   0000D6   1001         RETA
+     71              
+     72            case SECOND:                // FORWARD @ SECOND : 1
+     73              P6OUT |= R_FORWARD;       // FORWARD FOR 1 SECOND  
+   \                     ??project_5_main_code_3:
+   \   0000D8   D2D34302     BIS.B   #0x1, &0x243
+     74              P6OUT |= L_FORWARD;      
+   \   0000DC   E2D34302     BIS.B   #0x2, &0x243
+     75              display_code = FORWARD;
+   \   0000E0   A243....     MOV.W   #0x2, &display_code
+     76              break;
+     77              
+     78            }
+     79          }
+   \                     ??project_5_main_code_1:
+   \   0000E4   1001         RETA
+   \   0000E6                REQUIRE _A_PCOUT_L
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   project_5_main_code
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  _A_PCOUT_L
+       2  display_code
+     230  project_5_main_code
+
+ 
+ 230 bytes in segment CODE
+   2 bytes in segment DATA16_AN
+   2 bytes in segment DATA16_Z
+ 
+ 230 bytes of CODE memory
+   2 bytes of DATA memory (+ 2 bytes shared)
+
+Errors: none
+Warnings: none

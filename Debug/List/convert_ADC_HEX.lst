@@ -1,0 +1,679 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:12
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\convert_ADC_HEX.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWAFF7.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\convert_ADC_HEX.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\convert_ADC_HEX.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\convert_ADC_HEX.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\convert_ADC_HEX.c
+      1          #include "macros.h"
+      2          #include "functions.h"
+      3          #include <string.h>
+      4          
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      5          char display_IR_reading_L[NUM_OF_CHARS];
+   \                     display_IR_reading_L:
+   \   000000                DS8 11
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      6          char display_IR_reading_R[NUM_OF_CHARS];
+   \                     display_IR_reading_R:
+   \   000000                DS8 11
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      7          char display_thumb[NUM_OF_CHARS];
+   \                     display_thumb:
+   \   000000                DS8 11
+      8          
+      9          extern char display_line[NUM_OF_LINES][NUM_OF_CHARS];
+     10          extern char *display[NUM_OF_LINES];
+     11          
+     12          extern char T_thousands;
+     13          extern char T_hundreds;
+     14          extern char T_tens;
+     15          extern char T_ones;
+     16          
+     17          extern char R_thousands;
+     18          extern char R_hundreds;
+     19          extern char R_tens;
+     20          extern char R_ones;
+     21          
+     22          extern char L_thousands;
+     23          extern char L_hundreds;
+     24          extern char L_tens;
+     25          extern char L_ones;
+     26          
+     27          extern volatile int ADC_Thumb;
+     28          extern volatile int ADC_Left_Detect;
+     29          extern volatile int ADC_Right_Detect;
+     30          extern volatile unsigned int clock;
+     31          
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     32          char one_sec = RESET;
+   \                     one_sec:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     33          char ten_sec = RESET;
+   \                     ten_sec:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     34          char hun_sec = RESET;
+   \                     hun_sec:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     35          char hun_milli_sec = RESET;
+   \                     hun_milli_sec:
+   \   000000                DS8 1
+     36          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     37          volatile unsigned int Left_Average;
+   \                     Left_Average:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     38          volatile unsigned int Right_Average;
+   \                     Right_Average:
+   \   000000                DS8 2
+     39          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     40          unsigned int right_detect1 = RESET;
+   \                     right_detect1:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     41          unsigned int right_detect2 = RESET;
+   \                     right_detect2:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     42          unsigned int right_detect3 = RESET;
+   \                     right_detect3:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     43          unsigned int right_detect4 = RESET;
+   \                     right_detect4:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     44          unsigned int right_detect5 = RESET;
+   \                     right_detect5:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     45          unsigned int right_detect6 = RESET;
+   \                     right_detect6:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     46          unsigned int right_detect7 = RESET;
+   \                     right_detect7:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     47          unsigned int right_detect8 = RESET;
+   \                     right_detect8:
+   \   000000                DS8 2
+     48          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     49          unsigned int left_detect1 = RESET;
+   \                     left_detect1:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     50          unsigned int left_detect2 = RESET;
+   \                     left_detect2:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     51          unsigned int left_detect3 = RESET;
+   \                     left_detect3:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     52          unsigned int left_detect4 = RESET;
+   \                     left_detect4:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     53          unsigned int left_detect5 = RESET;
+   \                     left_detect5:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     54          unsigned int left_detect6 = RESET;
+   \                     left_detect6:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     55          unsigned int left_detect7 = RESET;
+   \                     left_detect7:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     56          unsigned int left_detect8 = RESET;
+   \                     left_detect8:
+   \   000000                DS8 2
+     57          
+
+   \                                 In  segment CODE, align 2
+     58          void convert_ADC(void){
+   \                     convert_ADC:
+     59            HEXtoBCD_left(); // Convert result to Strin
+   \   000000   ........     CALLA   #HEXtoBCD_left
+     60            HEXtoBCD_right();
+   \   000004   ........     CALLA   #HEXtoBCD_right
+     61            HEXtoBCD_thumb(ADC_Thumb);
+   \   000008   1C42....     MOV.W   &ADC_Thumb, R12
+   \   00000C   ........     CALLA   #HEXtoBCD_thumb
+     62            HEXtoBCD_Clock(clock);
+   \   000010   1C42....     MOV.W   &clock, R12
+   \   000014   ........     BRA     #HEXtoBCD_Clock
+     63            
+     64          }
+     65          
+
+   \                                 In  segment CODE, align 2
+     66          void HEXtoBCD_right(void){
+   \                     HEXtoBCD_right:
+   \   000000   F103         SUBA    #0x2, SP
+     67            average_right_thresh();
+   \   000002   ........     CALLA   #average_right_thresh
+     68            volatile unsigned int adc_val = Right_Average;
+   \   000006   9142....0000 MOV.W   &Right_Average, 0(SP)
+     69            
+     70            R_thousands = RESET;                                // Reset thousands place
+   \   00000C   C243....     MOV.B   #0x0, &R_thousands
+     71            while(adc_val >= THOUSANDS_PLACE){                      // Count the thousands place
+   \                     ??HEXtoBCD_right_0:
+   \   000010   B190E8030000 CMP.W   #0x3e8, 0(SP)
+   \   000016   0628         JNC     ??HEXtoBCD_right_4
+     72              adc_val -= THOUSANDS_PLACE;                            // decrement thousands place
+   \   000018   B15018FC0000 ADD.W   #0xfc18, 0(SP)
+     73              R_thousands ++;                               // increment thousands place
+   \   00001E   D253....     ADD.B   #0x1, &R_thousands
+   \   000022   F63F         JMP     ??HEXtoBCD_right_0
+     74            }
+     75            R_thousands += ASCIISHIFT;
+   \                     ??HEXtoBCD_right_4:
+   \   000024   F2503000.... ADD.B   #0x30, &R_thousands
+     76            
+     77            R_hundreds = RESET;                                 // Counts hundreds place              
+   \   00002A   C243....     MOV.B   #0x0, &R_hundreds
+     78            while(adc_val >= HUNDREDS_PLACE){                        
+   \                     ??HEXtoBCD_right_1:
+   \   00002E   B19064000000 CMP.W   #0x64, 0(SP)
+   \   000034   0628         JNC     ??HEXtoBCD_right_5
+     79              adc_val -= HUNDREDS_PLACE;
+   \   000036   B1509CFF0000 ADD.W   #0xff9c, 0(SP)
+     80              R_hundreds ++;
+   \   00003C   D253....     ADD.B   #0x1, &R_hundreds
+   \   000040   F63F         JMP     ??HEXtoBCD_right_1
+     81            }
+     82            R_hundreds += ASCIISHIFT;
+   \                     ??HEXtoBCD_right_5:
+   \   000042   F2503000.... ADD.B   #0x30, &R_hundreds
+     83            
+     84            R_tens = RESET;                                     // Counts tens place
+   \   000048   C243....     MOV.B   #0x0, &R_tens
+     85            while(adc_val >= TENS_PLACE){
+   \                     ??HEXtoBCD_right_2:
+   \   00004C   B1900A000000 CMP.W   #0xa, 0(SP)
+   \   000052   0628         JNC     ??HEXtoBCD_right_6
+     86              adc_val -= TENS_PLACE;
+   \   000054   B150F6FF0000 ADD.W   #0xfff6, 0(SP)
+     87              R_tens ++;
+   \   00005A   D253....     ADD.B   #0x1, &R_tens
+   \   00005E   F63F         JMP     ??HEXtoBCD_right_2
+     88            }
+     89            R_tens += ASCIISHIFT;
+   \                     ??HEXtoBCD_right_6:
+   \   000060   F2503000.... ADD.B   #0x30, &R_tens
+     90            
+     91            R_ones = RESET;                                     // Counts ones place
+   \   000066   C243....     MOV.B   #0x0, &R_ones
+     92            while(adc_val >= ONES_PLACE){
+   \                     ??HEXtoBCD_right_3:
+   \   00006A   81930000     CMP.W   #0x0, 0(SP)
+   \   00006E   0524         JEQ     ??HEXtoBCD_right_7
+     93              adc_val -= ONES_PLACE;
+   \   000070   B1530000     ADD.W   #0xffff, 0(SP)
+     94              R_ones ++;
+   \   000074   D253....     ADD.B   #0x1, &R_ones
+   \   000078   F83F         JMP     ??HEXtoBCD_right_3
+     95            }
+     96            R_ones += ASCIISHIFT;
+   \                     ??HEXtoBCD_right_7:
+   \   00007A   F2503000.... ADD.B   #0x30, &R_ones
+     97            
+     98          }
+   \   000080   E103         ADDA    #0x2, SP
+   \   000082   1001         RETA
+     99          
+
+   \                                 In  segment CODE, align 2
+    100          void HEXtoBCD_left(void){
+   \                     HEXtoBCD_left:
+   \   000000   F103         SUBA    #0x2, SP
+    101            average_left_thresh();
+   \   000002   ........     CALLA   #average_left_thresh
+    102            volatile unsigned int adc_val = Left_Average;
+   \   000006   9142....0000 MOV.W   &Left_Average, 0(SP)
+    103          
+    104            L_thousands = RESET;                                // Reset thousands place
+   \   00000C   C243....     MOV.B   #0x0, &L_thousands
+    105            while(adc_val >= THOUSANDS_PLACE){                      // Count the thousands place
+   \                     ??HEXtoBCD_left_0:
+   \   000010   B190E8030000 CMP.W   #0x3e8, 0(SP)
+   \   000016   0628         JNC     ??HEXtoBCD_left_4
+    106              adc_val -= THOUSANDS_PLACE;                            // decrement thousands place
+   \   000018   B15018FC0000 ADD.W   #0xfc18, 0(SP)
+    107              L_thousands ++;                               // increment thousands place
+   \   00001E   D253....     ADD.B   #0x1, &L_thousands
+   \   000022   F63F         JMP     ??HEXtoBCD_left_0
+    108            }
+    109            L_thousands += ASCIISHIFT;
+   \                     ??HEXtoBCD_left_4:
+   \   000024   F2503000.... ADD.B   #0x30, &L_thousands
+    110            
+    111            L_hundreds = RESET;                                 // Counts hundreds place              
+   \   00002A   C243....     MOV.B   #0x0, &L_hundreds
+    112            while(adc_val >= HUNDREDS_PLACE){                        
+   \                     ??HEXtoBCD_left_1:
+   \   00002E   B19064000000 CMP.W   #0x64, 0(SP)
+   \   000034   0628         JNC     ??HEXtoBCD_left_5
+    113              adc_val -= HUNDREDS_PLACE;
+   \   000036   B1509CFF0000 ADD.W   #0xff9c, 0(SP)
+    114              L_hundreds ++;
+   \   00003C   D253....     ADD.B   #0x1, &L_hundreds
+   \   000040   F63F         JMP     ??HEXtoBCD_left_1
+    115            }
+    116            L_hundreds += ASCIISHIFT;
+   \                     ??HEXtoBCD_left_5:
+   \   000042   F2503000.... ADD.B   #0x30, &L_hundreds
+    117            
+    118            L_tens = RESET;                                     // Counts tens place
+   \   000048   C243....     MOV.B   #0x0, &L_tens
+    119            while(adc_val >= TENS_PLACE){
+   \                     ??HEXtoBCD_left_2:
+   \   00004C   B1900A000000 CMP.W   #0xa, 0(SP)
+   \   000052   0628         JNC     ??HEXtoBCD_left_6
+    120              adc_val -= TENS_PLACE;
+   \   000054   B150F6FF0000 ADD.W   #0xfff6, 0(SP)
+    121              L_tens ++;
+   \   00005A   D253....     ADD.B   #0x1, &L_tens
+   \   00005E   F63F         JMP     ??HEXtoBCD_left_2
+    122            }
+    123            L_tens += ASCIISHIFT;
+   \                     ??HEXtoBCD_left_6:
+   \   000060   F2503000.... ADD.B   #0x30, &L_tens
+    124            
+    125            L_ones = RESET;                                     // Counts ones place
+   \   000066   C243....     MOV.B   #0x0, &L_ones
+    126            while(adc_val >= ONES_PLACE){
+   \                     ??HEXtoBCD_left_3:
+   \   00006A   81930000     CMP.W   #0x0, 0(SP)
+   \   00006E   0524         JEQ     ??HEXtoBCD_left_7
+    127              adc_val -= ONES_PLACE;
+   \   000070   B1530000     ADD.W   #0xffff, 0(SP)
+    128              L_ones ++;
+   \   000074   D253....     ADD.B   #0x1, &L_ones
+   \   000078   F83F         JMP     ??HEXtoBCD_left_3
+    129            }
+    130            L_ones += ASCIISHIFT;
+   \                     ??HEXtoBCD_left_7:
+   \   00007A   F2503000.... ADD.B   #0x30, &L_ones
+    131            
+    132            
+    133          }
+   \   000080   E103         ADDA    #0x2, SP
+   \   000082   1001         RETA
+    134          
+
+   \                                 In  segment CODE, align 2
+    135          void HEXtoBCD_thumb(int adc_val){
+   \                     HEXtoBCD_thumb:
+    136            
+    137            
+    138            T_thousands = RESET;                                // Reset thousands place
+   \   000000   C243....     MOV.B   #0x0, &T_thousands
+    139            while(adc_val >= THOUSANDS_PLACE){                      // Count the thousands place
+   \                     ??HEXtoBCD_thumb_0:
+   \   000004   3C90E803     CMP.W   #0x3e8, R12
+   \   000008   0538         JL      ??HEXtoBCD_thumb_4
+    140              adc_val -= THOUSANDS_PLACE;                            // decrement thousands place
+   \   00000A   3C5018FC     ADD.W   #0xfc18, R12
+    141              T_thousands ++;                               // increment thousands place
+   \   00000E   D253....     ADD.B   #0x1, &T_thousands
+   \   000012   F83F         JMP     ??HEXtoBCD_thumb_0
+    142            }
+    143            T_thousands += ASCIISHIFT;
+   \                     ??HEXtoBCD_thumb_4:
+   \   000014   F2503000.... ADD.B   #0x30, &T_thousands
+    144            
+    145            T_hundreds = RESET;                                 // Counts hundreds place              
+   \   00001A   C243....     MOV.B   #0x0, &T_hundreds
+    146            while(adc_val >= HUNDREDS_PLACE){                        
+   \                     ??HEXtoBCD_thumb_1:
+   \   00001E   3C906400     CMP.W   #0x64, R12
+   \   000022   0538         JL      ??HEXtoBCD_thumb_5
+    147              adc_val -= HUNDREDS_PLACE;
+   \   000024   3C509CFF     ADD.W   #0xff9c, R12
+    148              T_hundreds ++;
+   \   000028   D253....     ADD.B   #0x1, &T_hundreds
+   \   00002C   F83F         JMP     ??HEXtoBCD_thumb_1
+    149            }
+    150            T_hundreds += ASCIISHIFT;
+   \                     ??HEXtoBCD_thumb_5:
+   \   00002E   F2503000.... ADD.B   #0x30, &T_hundreds
+    151            
+    152            T_tens = RESET;                                     // Counts tens place
+   \   000034   C243....     MOV.B   #0x0, &T_tens
+    153            while(adc_val >= TENS_PLACE){
+   \                     ??HEXtoBCD_thumb_2:
+   \   000038   3C900A00     CMP.W   #0xa, R12
+   \   00003C   0538         JL      ??HEXtoBCD_thumb_6
+    154              adc_val -= TENS_PLACE;
+   \   00003E   3C50F6FF     ADD.W   #0xfff6, R12
+    155              T_tens ++;
+   \   000042   D253....     ADD.B   #0x1, &T_tens
+   \   000046   F83F         JMP     ??HEXtoBCD_thumb_2
+    156            }
+    157            T_tens += ASCIISHIFT;
+   \                     ??HEXtoBCD_thumb_6:
+   \   000048   F2503000.... ADD.B   #0x30, &T_tens
+    158            
+    159            T_ones = RESET;                                     // Counts ones place
+   \   00004E   C243....     MOV.B   #0x0, &T_ones
+    160            while(adc_val >= ONES_PLACE){
+   \                     ??HEXtoBCD_thumb_3:
+   \   000052   1C93         CMP.W   #0x1, R12
+   \   000054   0438         JL      ??HEXtoBCD_thumb_7
+    161              adc_val -= ONES_PLACE;
+   \   000056   3C53         ADD.W   #0xffff, R12
+    162              T_ones ++;
+   \   000058   D253....     ADD.B   #0x1, &T_ones
+   \   00005C   FA3F         JMP     ??HEXtoBCD_thumb_3
+    163            }
+    164            T_ones += ASCIISHIFT;
+   \                     ??HEXtoBCD_thumb_7:
+   \   00005E   F2503000.... ADD.B   #0x30, &T_ones
+    165          }
+   \   000064   1001         RETA
+    166          
+
+   \                                 In  segment CODE, align 2
+    167          void average_left_thresh(void){
+   \                     average_left_thresh:
+    168            left_detect1 = left_detect2;
+   \   000000   9242........ MOV.W   &left_detect2, &left_detect1
+    169            left_detect2 = left_detect3;
+   \   000006   9242........ MOV.W   &left_detect3, &left_detect2
+    170            left_detect3 = left_detect4;
+   \   00000C   9242........ MOV.W   &left_detect4, &left_detect3
+    171            left_detect4 = left_detect5;
+   \   000012   9242........ MOV.W   &left_detect5, &left_detect4
+    172            left_detect5 = left_detect6;
+   \   000018   9242........ MOV.W   &left_detect6, &left_detect5
+    173            left_detect6 = left_detect7;
+   \   00001E   9242........ MOV.W   &left_detect7, &left_detect6
+    174            left_detect7 = left_detect8;
+   \   000024   9242........ MOV.W   &left_detect8, &left_detect7
+    175            left_detect8 = ADC_Left_Detect;
+   \   00002A   9242........ MOV.W   &ADC_Left_Detect, &left_detect8
+    176            
+    177            Left_Average = (left_detect1 + left_detect2 + left_detect3 + left_detect4 + left_detect5 + left_detect6 + left_detect7 + left_detect8)>> DIVIDE8;
+   \   000030   1F42....     MOV.W   &left_detect1, R15
+   \   000034   1F52....     ADD.W   &left_detect2, R15
+   \   000038   1F52....     ADD.W   &left_detect3, R15
+   \   00003C   1F52....     ADD.W   &left_detect4, R15
+   \   000040   1F52....     ADD.W   &left_detect5, R15
+   \   000044   1F52....     ADD.W   &left_detect6, R15
+   \   000048   1F52....     ADD.W   &left_detect7, R15
+   \   00004C   1F52....     ADD.W   &left_detect8, R15
+   \   000050   5F0B         RRUM.W  #0x3, R15
+   \   000052   824F....     MOV.W   R15, &Left_Average
+    178            
+    179          }
+   \   000056   1001         RETA
+    180          
+
+   \                                 In  segment CODE, align 2
+    181          void average_right_thresh(void){
+   \                     average_right_thresh:
+    182            right_detect1 = right_detect2;
+   \   000000   9242........ MOV.W   &right_detect2, &right_detect1
+    183            right_detect2 = right_detect3;
+   \   000006   9242........ MOV.W   &right_detect3, &right_detect2
+    184            right_detect3 = right_detect4;
+   \   00000C   9242........ MOV.W   &right_detect4, &right_detect3
+    185            right_detect5 = right_detect6;
+   \   000012   9242........ MOV.W   &right_detect6, &right_detect5
+    186            right_detect6 = right_detect7;
+   \   000018   9242........ MOV.W   &right_detect7, &right_detect6
+    187            right_detect7 = right_detect8;
+   \   00001E   9242........ MOV.W   &right_detect8, &right_detect7
+    188            right_detect8 = ADC_Right_Detect;
+   \   000024   9242........ MOV.W   &ADC_Right_Detect, &right_detect8
+    189            
+    190            Right_Average = (right_detect1 + right_detect2 + right_detect3 + right_detect4 + right_detect5 + right_detect6 + right_detect7 + right_detect8)>> DIVIDE8;
+   \   00002A   1F42....     MOV.W   &right_detect1, R15
+   \   00002E   1F52....     ADD.W   &right_detect2, R15
+   \   000032   1F52....     ADD.W   &right_detect3, R15
+   \   000036   1F52....     ADD.W   &right_detect4, R15
+   \   00003A   1F52....     ADD.W   &right_detect5, R15
+   \   00003E   1F52....     ADD.W   &right_detect6, R15
+   \   000042   1F52....     ADD.W   &right_detect7, R15
+   \   000046   1F52....     ADD.W   &right_detect8, R15
+   \   00004A   5F0B         RRUM.W  #0x3, R15
+   \   00004C   824F....     MOV.W   R15, &Right_Average
+    191            
+    192          }
+   \   000050   1001         RETA
+    193          
+
+   \                                 In  segment CODE, align 2
+    194          void HEXtoBCD_Clock(int clock){
+   \                     HEXtoBCD_Clock:
+    195            int clock_temp = clock;
+   \   000000   0F4C         MOV.W   R12, R15
+    196            
+    197            hun_sec = RESET;
+   \   000002   C243....     MOV.B   #0x0, &hun_sec
+    198            while(clock_temp > 20000){
+   \                     ??HEXtoBCD_Clock_0:
+   \   000006   3F90214E     CMP.W   #0x4e21, R15
+   \   00000A   0538         JL      ??HEXtoBCD_Clock_4
+    199              clock_temp -= 20000;
+   \   00000C   3F50E0B1     ADD.W   #0xb1e0, R15
+    200              hun_sec ++;
+   \   000010   D253....     ADD.B   #0x1, &hun_sec
+   \   000014   F83F         JMP     ??HEXtoBCD_Clock_0
+    201            }
+    202            
+    203            ten_sec = RESET;
+   \                     ??HEXtoBCD_Clock_4:
+   \   000016   C243....     MOV.B   #0x0, &ten_sec
+    204            while(clock_temp > 2000){
+   \                     ??HEXtoBCD_Clock_1:
+   \   00001A   3F90D107     CMP.W   #0x7d1, R15
+   \   00001E   0538         JL      ??HEXtoBCD_Clock_5
+    205              clock_temp -=2000;
+   \   000020   3F5030F8     ADD.W   #0xf830, R15
+    206              ten_sec ++;
+   \   000024   D253....     ADD.B   #0x1, &ten_sec
+   \   000028   F83F         JMP     ??HEXtoBCD_Clock_1
+    207            }
+    208            
+    209            one_sec = RESET;
+   \                     ??HEXtoBCD_Clock_5:
+   \   00002A   C243....     MOV.B   #0x0, &one_sec
+    210            while(clock_temp > 200){
+   \                     ??HEXtoBCD_Clock_2:
+   \   00002E   3F90C900     CMP.W   #0xc9, R15
+   \   000032   0538         JL      ??HEXtoBCD_Clock_6
+    211              clock_temp -= 200;
+   \   000034   3F5038FF     ADD.W   #0xff38, R15
+    212              one_sec ++;
+   \   000038   D253....     ADD.B   #0x1, &one_sec
+   \   00003C   F83F         JMP     ??HEXtoBCD_Clock_2
+    213            }
+    214            
+    215            hun_milli_sec = RESET;
+   \                     ??HEXtoBCD_Clock_6:
+   \   00003E   C243....     MOV.B   #0x0, &hun_milli_sec
+    216            while(clock_temp > 40){
+   \                     ??HEXtoBCD_Clock_3:
+   \   000042   3F902900     CMP.W   #0x29, R15
+   \   000046   0538         JL      ??HEXtoBCD_Clock_7
+    217              clock_temp -= 40;
+   \   000048   3F50D8FF     ADD.W   #0xffd8, R15
+    218              hun_milli_sec ++;
+   \   00004C   D253....     ADD.B   #0x1, &hun_milli_sec
+   \   000050   F83F         JMP     ??HEXtoBCD_Clock_3
+    219            }  
+    220            
+    221            
+    222            hun_milli_sec += ASCIISHIFT;
+   \                     ??HEXtoBCD_Clock_7:
+   \   000052   F2503000.... ADD.B   #0x30, &hun_milli_sec
+    223            one_sec += ASCIISHIFT;
+   \   000058   F2503000.... ADD.B   #0x30, &one_sec
+    224            ten_sec += ASCIISHIFT;
+   \   00005E   F2503000.... ADD.B   #0x30, &ten_sec
+    225            hun_sec += ASCIISHIFT;
+   \   000064   F2503000.... ADD.B   #0x30, &hun_sec
+    226            
+    227          }
+   \   00006A   1001         RETA
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   HEXtoBCD_Clock
+      6   HEXtoBCD_left
+        6   -> average_left_thresh
+      6   HEXtoBCD_right
+        6   -> average_right_thresh
+      4   HEXtoBCD_thumb
+      4   average_left_thresh
+      4   average_right_thresh
+      4   convert_ADC
+        0   -> HEXtoBCD_Clock
+        4   -> HEXtoBCD_left
+        4   -> HEXtoBCD_right
+        4   -> HEXtoBCD_thumb
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     108  HEXtoBCD_Clock
+     132  HEXtoBCD_left
+     132  HEXtoBCD_right
+     102  HEXtoBCD_thumb
+       2  Left_Average
+       2  Right_Average
+      88  average_left_thresh
+      82  average_right_thresh
+      24  convert_ADC
+      11  display_IR_reading_L
+      11  display_IR_reading_R
+      11  display_thumb
+       1  hun_milli_sec
+       1  hun_sec
+       2  left_detect1
+       2  left_detect2
+       2  left_detect3
+       2  left_detect4
+       2  left_detect5
+       2  left_detect6
+       2  left_detect7
+       2  left_detect8
+       1  one_sec
+       2  right_detect1
+       2  right_detect2
+       2  right_detect3
+       2  right_detect4
+       2  right_detect5
+       2  right_detect6
+       2  right_detect7
+       2  right_detect8
+       1  ten_sec
+
+ 
+ 668 bytes in segment CODE
+  73 bytes in segment DATA16_Z
+ 
+ 668 bytes of CODE memory
+  73 bytes of DATA memory
+
+Errors: none
+Warnings: none

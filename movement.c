@@ -1,0 +1,96 @@
+#include "msp430.h"
+#include "msp430fr2355.h"
+#include "macros.h"
+#include "functions.h"
+
+void stop_car(void){
+  RIGHT_FORWARD_SPEED = STOP;
+  LEFT_FORWARD_SPEED = STOP;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void car_forward_slow(){
+  RIGHT_FORWARD_SPEED = RIGHT_SLOW;
+  LEFT_FORWARD_SPEED = LEFT_SLOW;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void car_forward_medium(){
+  RIGHT_FORWARD_SPEED = RIGHT_MEDIUM;
+  LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void car_forward_fast(){
+  RIGHT_FORWARD_SPEED = RIGHT_FAST;
+  LEFT_FORWARD_SPEED = LEFT_FAST;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void right_forward_slow(void){
+  RIGHT_REVERSE_SPEED = STOP;
+  RIGHT_FORWARD_SPEED = RIGHT_SLOW;
+}
+
+void right_forward_medium(void){
+  RIGHT_REVERSE_SPEED = STOP;
+  RIGHT_FORWARD_SPEED = RIGHT_MEDIUM;
+}
+
+void right_forward_fast(void){
+  RIGHT_REVERSE_SPEED = STOP;
+  RIGHT_FORWARD_SPEED = RIGHT_FAST;
+}
+
+void left_forward_slow(void){
+  LEFT_REVERSE_SPEED = STOP;
+  LEFT_FORWARD_SPEED = LEFT_SLOW;
+}
+
+void left_forward_medium(void){
+  LEFT_REVERSE_SPEED = STOP;
+  LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+}
+
+void left_forward_fast(void){
+  LEFT_REVERSE_SPEED = STOP;
+  LEFT_FORWARD_SPEED = LEFT_FAST;
+}
+
+void move_clockwise(void){
+  RIGHT_FORWARD_SPEED = STOP;
+  LEFT_FORWARD_SPEED = LEFT_CLOCKWISE;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+void move_clockwise_follow(void){
+  RIGHT_FORWARD_SPEED = STOP;
+  LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void move_clockwise_slowly(void){
+  RIGHT_FORWARD_SPEED = STOP;
+  LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void move_counterclockwise_follow(void){
+  RIGHT_FORWARD_SPEED = RIGHT_MEDIUM;
+  LEFT_FORWARD_SPEED = STOP;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = STOP;
+}
+
+void move_counterclockwise(void){
+  RIGHT_FORWARD_SPEED = RIGHT_COUNTERCLOCKWISE;;
+  LEFT_FORWARD_SPEED = STOP;
+  RIGHT_REVERSE_SPEED = STOP;
+  LEFT_REVERSE_SPEED = LEFT_COUNTERCLOCKWISE;
+}

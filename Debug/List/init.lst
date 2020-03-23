@@ -1,0 +1,528 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:12
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\init.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB24A.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\init.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\init.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\init.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\init.c
+      1          //------------------------------------------------------------------------------
+      2          //  File Name: init.c
+      3          //
+      4          //  Description: Contains the conditions to reset and display on the LCD
+      5          //
+      6          //
+      7          //  Quoc Chuong Vu
+      8          //  Jan 2020
+      9          //  Built with IAR Embedded Workbench Version: V4.10A/W32 (7.12.4)
+     10          //------------------------------------------------------------------------------
+     11          
+     12          //------------------------------------------------------------------------------
+     13          #include  "macros.h"
+     14          #include  "functions.h"
+     15          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x700
+   \   union <unnamed> _A_ADCCTL0_L
+   \                     _A_ADCCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x702
+   \   union <unnamed> _A_ADCCTL1_L
+   \                     _A_ADCCTL1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x704
+   \   union <unnamed> _A_ADCCTL2_L
+   \                     _A_ADCCTL2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x70a
+   \   union <unnamed> _A_ADCMCTL0_L
+   \                     _A_ADCMCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x71a
+   \   union <unnamed> _A_ADCIE_L
+   \                     _A_ADCIE_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x130
+   \   union <unnamed> _A_PM5CTL0_L
+   \                     _A_PM5CTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x380
+   \   union <unnamed> _A_TB0CTL_L
+   \                     _A_TB0CTL_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x382
+   \   union <unnamed> _A_TB0CCTL0_L
+   \                     _A_TB0CCTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x384
+   \   union <unnamed> _A_TB0CCTL1_L
+   \                     _A_TB0CCTL1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x386
+   \   union <unnamed> _A_TB0CCTL2_L
+   \                     _A_TB0CCTL2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x392
+   \   union <unnamed> _A_TB0CCR0_L
+   \                     _A_TB0CCR0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x394
+   \   union <unnamed> _A_TB0CCR1_L
+   \                     _A_TB0CCR1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x396
+   \   union <unnamed> _A_TB0CCR2_L
+   \                     _A_TB0CCR2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x3a0
+   \   union <unnamed> _A_TB0EX0_L
+   \                     _A_TB0EX0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x440
+   \   union <unnamed> _A_TB3CTL_L
+   \                     _A_TB3CTL_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x444
+   \   union <unnamed> _A_TB3CCTL1_L
+   \                     _A_TB3CCTL1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x446
+   \   union <unnamed> _A_TB3CCTL2_L
+   \                     _A_TB3CCTL2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x448
+   \   union <unnamed> _A_TB3CCTL3_L
+   \                     _A_TB3CCTL3_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x44a
+   \   union <unnamed> _A_TB3CCTL4_L
+   \                     _A_TB3CCTL4_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x452
+   \   union <unnamed> _A_TB3CCR0_L
+   \                     _A_TB3CCR0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x454
+   \   union <unnamed> _A_TB3CCR1_L
+   \                     _A_TB3CCR1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x456
+   \   union <unnamed> _A_TB3CCR2_L
+   \                     _A_TB3CCR2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x458
+   \   union <unnamed> _A_TB3CCR3_L
+   \                     _A_TB3CCR3_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x45a
+   \   union <unnamed> _A_TB3CCR4_L
+   \                     _A_TB3CCR4_L:
+   \   000000                DS8 2
+     16          #include "msp430fr2355.h"
+     17          
+     18          extern char display_line[NUM_LINE][DISPLAY_NUM_INDEX];
+     19          extern volatile unsigned char update_display;
+     20          extern char *display[NUM_LINE];
+     21          extern volatile unsigned int update_display_count;
+     22          extern unsigned int port3_4;
+     23          
+
+   \                                 In  segment CODE, align 2
+     24          void Init_All(void){
+   \                     Init_All:
+     25            
+     26            PM5CTL0 &= ~LOCKLPM5;
+   \   000000   92C33001     BIC.W   #0x1, &0x130
+     27            Init_Ports();                        // Initialize Ports
+   \   000004   ........     CALLA   #Init_Ports
+     28            Init_Clocks();                       // Initialize Clock System
+   \   000008   ........     CALLA   #Init_Clocks
+     29            Init_Conditions();                   // Initialize Variables and Initial Conditions
+   \   00000C   ........     CALLA   #Init_Conditions
+     30            Init_Timers();                       // Initialize Timers
+   \   000010   ........     CALLA   #Init_Timers
+     31            Init_LCD();                          // Initialize LCD
+   \   000014   ........     CALLA   #Init_LCD
+     32            Init_LEDs();                         // Initialize LED
+   \   000018   ........     CALLA   #Init_LEDs
+     33            Init_ADC();                          // Initialize ADC
+   \   00001C   ........     BRA     #Init_ADC
+   \   000020                REQUIRE _A_PM5CTL0_L
+     34            
+     35          }
+     36          
+
+   \                                 In  segment CODE, align 2
+     37          void Init_Ports(void){// This function calls the rest of the initialization functions
+   \                     Init_Ports:
+     38            
+     39            Init_Port1();
+   \   000000   ........     CALLA   #Init_Port1
+     40            Init_Port2();
+   \   000004   ........     CALLA   #Init_Port2
+     41            Init_Port3(USE_GPIO);
+   \   000008   0C43         MOV.W   #0x0, R12
+   \   00000A   ........     CALLA   #Init_Port3
+     42            Init_Port4();
+   \   00000E   ........     CALLA   #Init_Port4
+     43            Init_Port5();
+   \   000012   ........     CALLA   #Init_Port5
+     44            Init_Port6();
+   \   000016   ........     BRA     #Init_Port6
+     45            
+     46          }
+     47          
+     48          // Initializes the LCD to the current stored data
+
+   \                                 In  segment CODE, align 2
+     49          void Init_Conditions(void){
+   \                     Init_Conditions:
+   \   000000   0A12         PUSH.W  R10
+     50            //------------------------------------------------------------------------------
+     51            int i;
+     52            
+     53            for(i=DISPLAY_ZERO_INDEX;i<DISPLAY_NUM_INDEX;i++){
+   \   000002   0A43         MOV.W   #0x0, R10
+   \                     ??Init_Conditions_0:
+   \   000004   3A900B00     CMP.W   #0xb, R10
+   \   000008   0A34         JGE     ??Init_Conditions_1
+     54              display_line[DISPLAY_LINE_0][i] = RESET_STATE;
+   \   00000A   CA43....     MOV.B   #0x0, display_line(R10)
+     55              display_line[DISPLAY_LINE_1][i] = RESET_STATE;
+   \   00000E   CA43....     MOV.B   #0x0, display_line + 11(R10)
+     56              display_line[DISPLAY_LINE_2][i] = RESET_STATE;
+   \   000012   CA43....     MOV.B   #0x0, display_line + 22(R10)
+     57              display_line[DISPLAY_LINE_3][i] = RESET_STATE;
+   \   000016   CA43....     MOV.B   #0x0, display_line + 33(R10)
+     58            }
+   \   00001A   1A53         ADD.W   #0x1, R10
+   \   00001C   F33F         JMP     ??Init_Conditions_0
+     59            display_line[DISPLAY_LINE_0][DISPLAY_POSITION_END] = DISPLAY_CHAR_BLANK;
+   \                     ??Init_Conditions_1:
+   \   00001E   C243....     MOV.B   #0x0, &display_line + 10
+     60            display_line[DISPLAY_LINE_1][DISPLAY_POSITION_END] = DISPLAY_CHAR_BLANK;
+   \   000022   C243....     MOV.B   #0x0, &display_line + 21
+     61            display_line[DISPLAY_LINE_2][DISPLAY_POSITION_END] = DISPLAY_CHAR_BLANK;
+   \   000026   C243....     MOV.B   #0x0, &display_line + 32
+     62            display_line[DISPLAY_LINE_3][DISPLAY_POSITION_END] = DISPLAY_CHAR_BLANK;
+   \   00002A   C243....     MOV.B   #0x0, &display_line + 43
+     63            
+     64            display[DISPLAY_LINE_0] = &display_line[DISPLAY_LINE_0][DISPLAY_POSITION_FRONT];
+   \   00002E   B240........ MOV.W   #display_line, &display
+     65            display[DISPLAY_LINE_1] = &display_line[DISPLAY_LINE_1][DISPLAY_POSITION_FRONT];
+   \   000034   B240........ MOV.W   #display_line + 11, &display + 2
+     66            display[DISPLAY_LINE_2] = &display_line[DISPLAY_LINE_2][DISPLAY_POSITION_FRONT];
+   \   00003A   B240........ MOV.W   #display_line + 22, &display + 4
+     67            display[DISPLAY_LINE_3] = &display_line[DISPLAY_LINE_3][DISPLAY_POSITION_FRONT];
+   \   000040   B240........ MOV.W   #display_line + 33, &display + 6
+     68            update_display = UPDATE_DISPLAY_FALSE;
+   \   000046   C243....     MOV.B   #0x0, &update_display
+     69            update_display_count = DISPLAY_COUNT_START;
+   \   00004A   8243....     MOV.W   #0x0, &update_display_count
+     70            // Interrupts are disabled by default, enable them.
+     71            enable_interrupts();
+   \   00004E   ........     CALLA   #enable_interrupts
+     72            //------------------------------------------------------------------------------
+     73          }
+   \   000052   3A41         POP.W   R10
+   \   000054   1001         RETA
+     74          
+
+   \                                 In  segment CODE, align 2
+     75          void Init_Timers(void){
+   \                     Init_Timers:
+     76            Init_Timer_B0();
+   \   000000   ........     CALLA   #Init_Timer_B0
+     77            Init_Timer_B3();
+   \   000004   ........     BRA     #Init_Timer_B3
+     78          }
+     79          
+
+   \                                 In  segment CODE, align 2
+     80          void Init_ADC(void){
+   \                     Init_ADC:
+     81            
+     82            // ADCCTL0 Register
+     83            ADCCTL0 = RESET; // Reset
+   \   000000   82430007     MOV.W   #0x0, &0x700
+     84            ADCCTL0 |= ADCSHT_2; // 16 ADC clocks
+   \   000004   B2D000020007 BIS.W   #0x200, &0x700
+     85            ADCCTL0 |= ADCMSC; // MSC
+   \   00000A   B2D080000007 BIS.W   #0x80, &0x700
+     86            ADCCTL0 |= ADCON; // ADC ON
+   \   000010   B2D010000007 BIS.W   #0x10, &0x700
+     87            
+     88            // ADCCTL1 Register
+     89            ADCCTL2 = RESET; // Reset
+   \   000016   82430407     MOV.W   #0x0, &0x704
+     90            ADCCTL1 |= ADCSHS_0; // 00b = ADCSC bit
+   \   00001A   924202070207 MOV.W   &0x702, &0x702
+     91            ADCCTL1 |= ADCSHP; // ADC sample-and-hold SAMPCON signal from sampling timer.
+   \   000020   B2D000020207 BIS.W   #0x200, &0x702
+     92            ADCCTL1 &= ~ADCISSH; // ADC invert signal sample-and-hold.
+   \   000026   B2C000010207 BIC.W   #0x100, &0x702
+     93            ADCCTL1 |= ADCDIV_0; // ADC clock divider - 000b = Divide by 1
+   \   00002C   924202070207 MOV.W   &0x702, &0x702
+     94            ADCCTL1 |= ADCSSEL_0; // ADC clock MODCLK
+   \   000032   924202070207 MOV.W   &0x702, &0x702
+     95            ADCCTL1 |= ADCCONSEQ_0; // ADC conversion sequence 00b = Single-channel single-conversion
+   \   000038   924202070207 MOV.W   &0x702, &0x702
+     96            // ADCCTL1 & ADCBUSY identifies a conversion is in process
+     97            
+     98            // ADCCTL2 Register
+     99            ADCCTL2 = RESET; // Reset
+   \   00003E   82430407     MOV.W   #0x0, &0x704
+    100            ADCCTL2 |= ADCPDIV0; // ADC pre-divider 00b = Pre-divide by 1
+   \   000042   B2D000010407 BIS.W   #0x100, &0x704
+    101            ADCCTL2 |= ADCRES_2; // ADC resolution 10b = 12 bit (14 clock cycle conversion time)
+   \   000048   B2D020000407 BIS.W   #0x20, &0x704
+    102            ADCCTL2 &= ~ADCDF; // ADC data read-back format 0b = Binary unsigned.
+   \   00004E   B2C20407     BIC.W   #0x8, &0x704
+    103            ADCCTL2 &= ~ADCSR; // ADC sampling rate 0b = ADC buffer supports up to 200 ksps
+   \   000052   A2C20407     BIC.W   #0x4, &0x704
+    104            
+    105            // ADCMCTL0 Register
+    106            ADCMCTL0 |= ADCSREF_0; // VREF - 000b = {VR+ = AVCC and VR– = AVSS }
+   \   000056   92420A070A07 MOV.W   &0x70a, &0x70a
+    107            ADCMCTL0 |= ADCINCH_2; // V_THUMB (0x20) Pin 5 A5
+   \   00005C   A2D30A07     BIS.W   #0x2, &0x70a
+    108            
+    109            ADCIE |= ADCIE0; // Enable ADC conv complete interrupt
+   \   000060   92D31A07     BIS.W   #0x1, &0x71a
+    110            ADCCTL0 |= ADCENC; // ADC enable conversion.
+   \   000064   A2D30007     BIS.W   #0x2, &0x700
+    111            ADCCTL0 |= ADCSC; // ADC start conversion.
+   \   000068   92D30007     BIS.W   #0x1, &0x700
+    112            
+    113          }
+   \   00006C   1001         RETA
+   \   00006E                REQUIRE _A_ADCCTL0_L
+   \   00006E                REQUIRE _A_ADCCTL2_L
+   \   00006E                REQUIRE _A_ADCCTL1_L
+   \   00006E                REQUIRE _A_ADCMCTL0_L
+   \   00006E                REQUIRE _A_ADCIE_L
+    114          
+
+   \                                 In  segment CODE, align 2
+    115          void Init_Timer_B0(void){
+   \                     Init_Timer_B0:
+    116            TB0CTL = TBSSEL__SMCLK;               // SMCLK source
+   \   000000   B24000028003 MOV.W   #0x200, &0x380
+    117            TB0CTL|= TBCLR ;                      // Resets TB0R , clock divider, count direction
+   \   000006   A2D28003     BIS.W   #0x4, &0x380
+    118            TB0CTL|= MC__CONTINOUS;               // Continuous up
+   \   00000A   B2D020008003 BIS.W   #0x20, &0x380
+    119            
+    120            // Divides the clock speed
+    121            TB0CTL|= ID_1;                        // Divide clock by 2
+   \   000010   B2D040008003 BIS.W   #0x40, &0x380
+    122            TB0EX0= TBIDEX_7;                    // Divide clock by an additional 8
+   \   000016   B2400700A003 MOV.W   #0x7, &0x3a0
+    123            TB0CCR0= TB0CCR0_INTERVAL;           // CCR0
+   \   00001C   B240C4099203 MOV.W   #0x9c4, &0x392
+    124            TB0CCTL0|= CCIE;                      // CCR0 enable interrupt
+   \   000022   B2D010008203 BIS.W   #0x10, &0x382
+    125            
+    126            //
+    127            TB0CCR1 = TB0CCR1_INTERVAL;        // CCR1
+   \   000028   B240C4099403 MOV.W   #0x9c4, &0x394
+    128            TB0CCTL1 |= CCIE;                   // CCR1 enable interrupt
+   \   00002E   B2D010008403 BIS.W   #0x10, &0x384
+    129            TB0CCR2 = TB0CCR2_INTERVAL;        // CCR2
+   \   000034   B240C4099603 MOV.W   #0x9c4, &0x396
+    130            TB0CCTL2 |= CCIE;                   // CCR2 enable interrupt
+   \   00003A   B2D010008603 BIS.W   #0x10, &0x386
+    131            
+    132            TB0CTL&= ~TBIE ;                      // Disable Overflow Interrupt
+   \   000040   A2C38003     BIC.W   #0x2, &0x380
+    133            TB0CTL&= ~TBIFG ;                     // Clear Overflow Interrupt flag
+   \   000044   92C38003     BIC.W   #0x1, &0x380
+    134          }
+   \   000048   1001         RETA
+   \   00004A                REQUIRE _A_TB0CTL_L
+   \   00004A                REQUIRE _A_TB0EX0_L
+   \   00004A                REQUIRE _A_TB0CCR0_L
+   \   00004A                REQUIRE _A_TB0CCTL0_L
+   \   00004A                REQUIRE _A_TB0CCR1_L
+   \   00004A                REQUIRE _A_TB0CCTL1_L
+   \   00004A                REQUIRE _A_TB0CCR2_L
+   \   00004A                REQUIRE _A_TB0CCTL2_L
+    135          
+
+   \                                 In  segment CODE, align 2
+    136          void Init_Timer_B3(void){
+   \                     Init_Timer_B3:
+    137            //------------------------------------------------------------------------------
+    138            // SMCLK source, up count mode, PWM Right Side
+    139            // TB3.1 P6.0 R_FORWARD
+    140            // TB3.2 P6.1 L_FORWARD
+    141            // TB3.3 P6.2 R_REVERSE
+    142            // TB3.4 P6.3 L_REVERSE
+    143            //------------------------------------------------------------------------------
+    144            TB3CTL = TBSSEL__SMCLK; // SMCLK
+   \   000000   B24000024004 MOV.W   #0x200, &0x440
+    145            TB3CTL |= MC__UP; // Up Mode
+   \   000006   B2D010004004 BIS.W   #0x10, &0x440
+    146            TB3CTL |= TBCLR; // Clear TAR
+   \   00000C   A2D24004     BIS.W   #0x4, &0x440
+    147            TB3CCR0 = WHEEL_PERIOD; // PWM Period
+   \   000010   B240E8035204 MOV.W   #0x3e8, &0x452
+    148            TB3CCTL1 = OUTMOD_7; // CCR1 reset/set
+   \   000016   B240E0004404 MOV.W   #0xe0, &0x444
+    149            RIGHT_FORWARD_SPEED = WHEEL_OFF; // P6.0 Right Forward PWM duty cycle
+   \   00001C   82435404     MOV.W   #0x0, &0x454
+    150            TB3CCTL2 = OUTMOD_7; // CCR2 reset/set
+   \   000020   B240E0004604 MOV.W   #0xe0, &0x446
+    151            LEFT_FORWARD_SPEED = WHEEL_OFF; // P6.1 Left Forward PWM duty cycle
+   \   000026   82435604     MOV.W   #0x0, &0x456
+    152            TB3CCTL3 = OUTMOD_7; // CCR3 reset/set
+   \   00002A   B240E0004804 MOV.W   #0xe0, &0x448
+    153            RIGHT_REVERSE_SPEED = WHEEL_OFF; // P6.2 Right Reverse PWM duty cycle
+   \   000030   82435804     MOV.W   #0x0, &0x458
+    154            TB3CCTL4 = OUTMOD_7; // CCR4 reset/set
+   \   000034   B240E0004A04 MOV.W   #0xe0, &0x44a
+    155            LEFT_REVERSE_SPEED = WHEEL_OFF; // P6.3 Left Reverse PWM duty cycle
+   \   00003A   82435A04     MOV.W   #0x0, &0x45a
+    156            //------------------------------------------------------------------------------
+    157          }
+   \   00003E   1001         RETA
+   \   000040                REQUIRE _A_TB3CTL_L
+   \   000040                REQUIRE _A_TB3CCR0_L
+   \   000040                REQUIRE _A_TB3CCTL1_L
+   \   000040                REQUIRE _A_TB3CCR1_L
+   \   000040                REQUIRE _A_TB3CCTL2_L
+   \   000040                REQUIRE _A_TB3CCR2_L
+   \   000040                REQUIRE _A_TB3CCTL3_L
+   \   000040                REQUIRE _A_TB3CCR3_L
+   \   000040                REQUIRE _A_TB3CCTL4_L
+   \   000040                REQUIRE _A_TB3CCR4_L
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   Init_ADC
+      4   Init_All
+        0   -> Init_ADC
+        4   -> Init_Clocks
+        4   -> Init_Conditions
+        4   -> Init_LCD
+        4   -> Init_LEDs
+        4   -> Init_Ports
+        4   -> Init_Timers
+      6   Init_Conditions
+        6   -> enable_interrupts
+      4   Init_Ports
+        4   -> Init_Port1
+        4   -> Init_Port2
+        4   -> Init_Port3
+        4   -> Init_Port4
+        4   -> Init_Port5
+        0   -> Init_Port6
+      4   Init_Timer_B0
+      4   Init_Timer_B3
+      4   Init_Timers
+        4   -> Init_Timer_B0
+        0   -> Init_Timer_B3
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+     110  Init_ADC
+      32  Init_All
+      86  Init_Conditions
+      26  Init_Ports
+      74  Init_Timer_B0
+      64  Init_Timer_B3
+       8  Init_Timers
+       2  _A_ADCCTL0_L
+       2  _A_ADCCTL1_L
+       2  _A_ADCCTL2_L
+       2  _A_ADCIE_L
+       2  _A_ADCMCTL0_L
+       2  _A_PM5CTL0_L
+       2  _A_TB0CCR0_L
+       2  _A_TB0CCR1_L
+       2  _A_TB0CCR2_L
+       2  _A_TB0CCTL0_L
+       2  _A_TB0CCTL1_L
+       2  _A_TB0CCTL2_L
+       2  _A_TB0CTL_L
+       2  _A_TB0EX0_L
+       2  _A_TB3CCR0_L
+       2  _A_TB3CCR1_L
+       2  _A_TB3CCR2_L
+       2  _A_TB3CCR3_L
+       2  _A_TB3CCR4_L
+       2  _A_TB3CCTL1_L
+       2  _A_TB3CCTL2_L
+       2  _A_TB3CCTL3_L
+       2  _A_TB3CCTL4_L
+       2  _A_TB3CTL_L
+
+ 
+ 400 bytes in segment CODE
+  48 bytes in segment DATA16_AN
+ 
+ 400 bytes of CODE memory
+   0 bytes of DATA memory (+ 48 bytes shared)
+
+Errors: none
+Warnings: none

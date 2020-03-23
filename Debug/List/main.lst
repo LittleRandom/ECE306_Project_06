@@ -1,0 +1,132 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:13
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\main.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB453.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\main.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\main.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\main.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\main.c
+      1          //------------------------------------------------------------------------------
+      2          //  File Name: main.c
+      3          //
+      4          //  Description: This file contains the Main Routine - "While" Operating System
+      5          //
+      6          //
+      7          //  Quoc Chuong Vu
+      8          //  Jan 2020
+      9          //  Built with IAR Embedded Workbench Version: V4.10A/W32 (7.12.4)
+     10          //------------------------------------------------------------------------------
+     11          
+     12          //------------------------------------------------------------------------------
+     13          
+     14          #include  <string.h>
+     15          #include "msp430.h"
+     16          #include "msp430fr2355.h"
+     17          #include "macros.h"
+     18          #include "functions.h"
+     19          
+     20          extern int movement_states;
+     21          
+
+   \                                 In  segment CODE, align 2
+     22          void main(void){
+   \                     main:
+     23            
+     24            //------------------------------------------------------------------------------
+     25            // Main Program
+     26            // This is the main routine for the program. Execution of code starts here.
+     27            // The operating system is Back Ground Fore Ground.
+     28            //
+     29            //------------------------------------------------------------------------------
+     30            // Initializes ADC, LED, LCD, PORTS, EVERYTHING.
+     31            //------------------------------------------------------------------------------
+     32            Init_All();
+   \   000000   ........     CALLA   #Init_All
+     33            //------------------------------------------------------------------------------
+     34            // Begining of the "While" Operating System
+     35            //    - This means that the car will always run.
+     36            //------------------------------------------------------------------------------
+     37            while(ALWAYS) {                      // Can the Operating system run
+     38          
+     39              get_on_blackline();
+   \                     ??main_0:
+   \   000004   ........     CALLA   #get_on_blackline
+     40          
+     41              
+     42              Switches_Process();                // Check for switch state change
+   \   000008   ........     CALLA   #Switches_Process
+     43              Display_Process();                 // Display_Procress Code
+   \   00000C   ........     CALLA   #Display_Process
+     44              
+     45              update_display_state();            // Bulk updating LCD screen code
+   \   000010   ........     CALLA   #update_display_state
+   \   000014   F73F         JMP     ??main_0
+   \   000016   0343         NOP
+     46              
+     47            }
+     48            
+     49            
+     50            //------------------------------------------------------------------------------
+     51          }
+     52          
+     53          
+     54          
+     55          
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   main
+        4   -> Display_Process
+        4   -> Init_All
+        4   -> Switches_Process
+        4   -> get_on_blackline
+        4   -> update_display_state
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      24  main
+
+ 
+ 24 bytes in segment CODE
+ 
+ 24 bytes of CODE memory
+
+Errors: none
+Warnings: none

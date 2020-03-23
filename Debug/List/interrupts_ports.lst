@@ -1,0 +1,209 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:13
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\interrupts_ports.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB2F8.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\interrupts_ports.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\interrupts_ports.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\interrupts_ports.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\interrupts_ports.c
+      1          // Port 4 interrupt. For switches, they are disabled for the duration
+      2          // of the debounce timer. Flag is set that user space can check.
+      3          
+      4          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x21a
+   \   union <unnamed> _A_PAIE_L
+   \                     _A_PAIE_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x21c
+   \   union <unnamed> _A_PAIFG_L
+   \                     _A_PAIFG_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x23a
+   \   union <unnamed> _A_PBIE_L
+   \                     _A_PBIE_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x23c
+   \   union <unnamed> _A_PBIFG_L
+   \                     _A_PBIFG_L:
+   \   000000                DS8 2
+      5          #include "msp430fr2355.h"
+      6          #include "macros.h"
+      7          #include "functions.h"
+      8          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      9          int IR_LED_ONOFF = OFF;
+   \                     IR_LED_ONOFF:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     10          int button_on = RESET;
+   \                     button_on:
+   \   000000                DS8 2
+     11          extern unsigned int debounce_count;
+     12          extern volatile unsigned int debounce_counter_SW1;
+     13          extern volatile unsigned int debounce_counter_SW2;
+     14          extern volatile unsigned int counter;
+     15          
+     16          #pragma vector = PORT4_VECTOR
+
+   \                                 In  segment ISR_CODE, align 2
+     17          __interrupt void switchP4_interrupt(void){
+   \                     switchP4_interrupt:
+   \   000000   3F15         PUSHM.W #0x4, R15
+     18            // Switch 1
+     19            if (P4IFG & SW1){
+   \   000002   E2B33D02     BIT.B   #0x2, &0x23d
+   \   000006   0C28         JNC     ??switchP4_interrupt_0
+     20              P4IFG &= ~SW1; // IFG SW1 cleared
+   \   000008   E2C33D02     BIC.B   #0x2, &0x23d
+     21              debounce_count++;
+   \   00000C   9253....     ADD.W   #0x1, &debounce_count
+     22              debounce_counter_SW1 = RESET;
+   \   000010   8243....     MOV.W   #0x0, &debounce_counter_SW1
+     23              P4IE  &= ~SW1;
+   \   000014   E2C33B02     BIC.B   #0x2, &0x23b
+     24              Red_LED_on();
+   \   000018   ........     CALLA   #Red_LED_on
+     25              counter = RESET;
+   \   00001C   8243....     MOV.W   #0x0, &counter
+     26              }
+     27            
+     28          }
+   \                     ??switchP4_interrupt_0:
+   \   000020   3C17         POPM.W  #0x4, R15
+   \   000022   0013         RETI
+   \   000024                REQUIRE _A_PBIFG_L
+   \   000024                REQUIRE _A_PBIE_L
+     29          
+     30          #pragma vector = PORT2_VECTOR
+
+   \                                 In  segment ISR_CODE, align 2
+     31          __interrupt void switchP2_interrupt(void){
+   \                     switchP2_interrupt:
+   \   000000   3F15         PUSHM.W #0x4, R15
+     32            // Switch 2
+     33            if (P2IFG & SW2) {
+   \   000002   F2B21D02     BIT.B   #0x8, &0x21d
+   \   000006   1828         JNC     ??switchP2_interrupt_1
+     34              P2IFG &= ~SW2; // IFG SW2 cleared
+   \   000008   F2C21D02     BIC.B   #0x8, &0x21d
+     35              if(IR_LED_ONOFF == ON) {
+   \   00000C   9293....     CMP.W   #0x1, &IR_LED_ONOFF
+   \   000010   0620         JNE     ??switchP2_interrupt_2
+     36                toggle_IR_LED(OFF);
+   \   000012   0C43         MOV.W   #0x0, R12
+   \   000014   ........     CALLA   #toggle_IR_LED
+     37                IR_LED_ONOFF = OFF;
+   \   000018   8243....     MOV.W   #0x0, &IR_LED_ONOFF
+   \   00001C   053C         JMP     ??switchP2_interrupt_0
+     38              }
+     39              else {
+     40                toggle_IR_LED(ON);
+   \                     ??switchP2_interrupt_2:
+   \   00001E   1C43         MOV.W   #0x1, R12
+   \   000020   ........     CALLA   #toggle_IR_LED
+     41                IR_LED_ONOFF = ON;
+   \   000024   9243....     MOV.W   #0x1, &IR_LED_ONOFF
+     42              }
+     43              debounce_count++;
+   \                     ??switchP2_interrupt_0:
+   \   000028   9253....     ADD.W   #0x1, &debounce_count
+     44              debounce_counter_SW2 = RESET;
+   \   00002C   8243....     MOV.W   #0x0, &debounce_counter_SW2
+     45              P2IE &= ~SW2;
+   \   000030   F2C21B02     BIC.B   #0x8, &0x21b
+     46              Grn_LED_on();
+   \   000034   ........     CALLA   #Grn_LED_on
+     47            }
+     48          }
+   \                     ??switchP2_interrupt_1:
+   \   000038   3C17         POPM.W  #0x4, R15
+   \   00003A   0013         RETI
+   \   00003C                REQUIRE _A_PAIFG_L
+   \   00003C                REQUIRE _A_PAIE_L
+
+   \                                 In  segment INTVEC, offset 0x2c, root
+   \                     `??switchP4_interrupt::??INTVEC 44`:
+   \   00002C   ....         DC16    switchP4_interrupt
+
+   \                                 In  segment INTVEC, offset 0x30, root
+   \                     `??switchP2_interrupt::??INTVEC 48`:
+   \   000030   ....         DC16    switchP2_interrupt
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+     12   switchP2_interrupt
+       12   -> Grn_LED_on
+       12   -> toggle_IR_LED
+     12   switchP4_interrupt
+       12   -> Red_LED_on
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  IR_LED_ONOFF
+       2  _A_PAIE_L
+       2  _A_PAIFG_L
+       2  _A_PBIE_L
+       2  _A_PBIFG_L
+       2  button_on
+      60  switchP2_interrupt
+       2  switchP2_interrupt::??INTVEC 48
+      36  switchP4_interrupt
+       2  switchP4_interrupt::??INTVEC 44
+
+ 
+  8 bytes in segment DATA16_AN
+  4 bytes in segment DATA16_Z
+  4 bytes in segment INTVEC
+ 96 bytes in segment ISR_CODE
+ 
+ 96 bytes of CODE  memory
+  0 bytes of CONST memory (+ 4 bytes shared)
+  4 bytes of DATA  memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none

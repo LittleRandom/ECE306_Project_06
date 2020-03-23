@@ -1,0 +1,437 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           10/Feb/2020  12:59:57
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 05\figures.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWF558.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 05\figures.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 05\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 05\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 05\Debug\List\figures.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Homework\Homework 05\Debug\Obj\figures.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Homework\Homework 05\figures.c
+      1          //******************************************************************************
+      2          //  File Name: circle.c
+      3          //
+      4          //  Description: Function to make car go in circle.
+      5          //
+      6          //  Quoc Chuong Vu
+      7          //  Jan 2020
+      8          //  Built with IAR Embedded Workbench Version: V4.10A/W32 (7.12.4)
+      9          //******************************************************************************
+     10          
+     11          #include "macros.h"
+     12          #include "functions.h"
+     13          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x242
+   \   union <unnamed> _A_PCOUT_L
+   \                     _A_PCOUT_L:
+   \   000000                DS8 2
+     14          #include  <string.h>
+     15          
+     16          extern char display_line[NUM_LINE][DISPLAY_NUM_INDEX];
+     17          extern char *display[NUM_LINE];
+     18          extern unsigned char display_mode;
+     19          extern volatile unsigned char display_changed;
+     20          extern volatile unsigned char update_display;
+     21          extern volatile unsigned int update_display_count;
+     22          extern volatile unsigned int Time_Sequence;
+     23          extern long int my_clock;
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     24          int Old_Time_Sequence;
+   \                     Old_Time_Sequence:
+   \   000000                DS8 2
+     25          
+
+   \                                 In  segment CODE, align 2
+     26          void Go_Circle(int direction, int duty_cycle, int timing){
+   \                     Go_Circle:
+     27            
+     28            P6OUT |= L_FORWARD;
+   \   000000   E2D34302     BIS.B   #0x2, &0x243
+     29            P6OUT |= R_FORWARD;
+   \   000004   D2D34302     BIS.B   #0x1, &0x243
+     30            
+     31            my_clock = RESET;
+   \   000008   8243....     MOV.W   #0x0, &my_clock
+   \   00000C   8243....     MOV.W   #0x0, &my_clock + 2
+     32            while(my_clock<timing){
+   \                     ??Go_Circle_0:
+   \   000010   0F4E         MOV.W   R14, R15
+   \   000012   0F5F         RLA.W   R15
+   \   000014   0F7F         SUBC.W  R15, R15
+   \   000016   3FE3         XOR.W   #0xffff, R15
+   \   000018   829F....     CMP.W   R15, &my_clock + 2
+   \   00001C   0438         JL      ??Go_Circle_5
+   \   00001E   3520         JNE     ??Go_Circle_6
+   \   000020   829E....     CMP.W   R14, &my_clock
+   \   000024   322C         JC      ??Go_Circle_6
+     33              if(direction == CLOCKWISE){
+   \                     ??Go_Circle_5:
+   \   000026   1C93         CMP.W   #0x1, R12
+   \   000028   1820         JNE     ??Go_Circle_7
+     34                for(int i=ZERO; i<MAX_DUTY_CYCLE; i++){
+   \   00002A   0F43         MOV.W   #0x0, R15
+   \                     ??Go_Circle_1:
+   \   00002C   3F906400     CMP.W   #0x64, R15
+   \   000030   EF37         JGE     ??Go_Circle_0
+     35                  if(i>duty_cycle){
+   \   000032   0D9F         CMP.W   R15, R13
+   \   000034   0334         JGE     ??Go_Circle_8
+     36                    P6OUT |= L_FORWARD;
+   \   000036   E2D34302     BIS.B   #0x2, &0x243
+   \   00003A   023C         JMP     ??Go_Circle_3
+     37                  } else {
+     38                    P6OUT &= ~L_FORWARD;
+   \                     ??Go_Circle_8:
+   \   00003C   E2C34302     BIC.B   #0x2, &0x243
+     39                  }
+     40                  if(Old_Time_Sequence != Time_Sequence){
+   \                     ??Go_Circle_3:
+   \   000040   9292........ CMP.W   &Time_Sequence, &Old_Time_Sequence
+   \   000046   0724         JEQ     ??Go_Circle_9
+     41                    Old_Time_Sequence = Time_Sequence;
+   \   000048   9242........ MOV.W   &Time_Sequence, &Old_Time_Sequence
+     42                    my_clock++;
+   \   00004E   9253....     ADD.W   #0x1, &my_clock
+   \   000052   8263....     ADDC.W  #0x0, &my_clock + 2
+     43                  }
+     44                }
+   \                     ??Go_Circle_9:
+   \   000056   1F53         ADD.W   #0x1, R15
+   \   000058   E93F         JMP     ??Go_Circle_1
+     45              } else {
+     46                for(int i=ZERO; i<MAX_DUTY_CYCLE; i++){
+   \                     ??Go_Circle_7:
+   \   00005A   0F43         MOV.W   #0x0, R15
+   \                     ??Go_Circle_2:
+   \   00005C   3F906400     CMP.W   #0x64, R15
+   \   000060   D737         JGE     ??Go_Circle_0
+     47                  if(i>duty_cycle){
+   \   000062   0D9F         CMP.W   R15, R13
+   \   000064   0334         JGE     ??Go_Circle_10
+     48                    P6OUT |= R_FORWARD;
+   \   000066   D2D34302     BIS.B   #0x1, &0x243
+   \   00006A   023C         JMP     ??Go_Circle_4
+     49                  } else {
+     50                    P6OUT &= ~R_FORWARD;
+   \                     ??Go_Circle_10:
+   \   00006C   D2C34302     BIC.B   #0x1, &0x243
+     51                  }
+     52                  if(Old_Time_Sequence != Time_Sequence){
+   \                     ??Go_Circle_4:
+   \   000070   9292........ CMP.W   &Time_Sequence, &Old_Time_Sequence
+   \   000076   0724         JEQ     ??Go_Circle_11
+     53                    Old_Time_Sequence = Time_Sequence;
+   \   000078   9242........ MOV.W   &Time_Sequence, &Old_Time_Sequence
+     54                    my_clock++;
+   \   00007E   9253....     ADD.W   #0x1, &my_clock
+   \   000082   8263....     ADDC.W  #0x0, &my_clock + 2
+     55                  }
+     56                }
+   \                     ??Go_Circle_11:
+   \   000086   1F53         ADD.W   #0x1, R15
+   \   000088   E93F         JMP     ??Go_Circle_2
+     57              }
+     58            }
+     59            
+     60            P6OUT &= ~L_FORWARD;
+   \                     ??Go_Circle_6:
+   \   00008A   E2C34302     BIC.B   #0x2, &0x243
+     61            P6OUT &= ~R_FORWARD;
+   \   00008E   D2C34302     BIC.B   #0x1, &0x243
+     62            
+     63          }
+   \   000092   1001         RETA
+   \   000094                REQUIRE _A_PCOUT_L
+     64          
+
+   \                                 In  segment CODE, align 2
+     65          void Go_Eight(void){
+   \                     Go_Eight:
+     66            Go_Circle(CLOCKWISE,DUTY_CYCLE,TIMING);
+   \   000000   3E40EE02     MOV.W   #0x2ee, R14
+   \   000004   3D404600     MOV.W   #0x46, R13
+   \   000008   1C43         MOV.W   #0x1, R12
+   \   00000A   ........     CALLA   #Go_Circle
+     67            Go_Circle(COUNTERCLOCKWISE,DUTY_CYCLE,TIMING);
+   \   00000E   3E40EE02     MOV.W   #0x2ee, R14
+   \   000012   3D404600     MOV.W   #0x46, R13
+   \   000016   0C43         MOV.W   #0x0, R12
+   \   000018   ........     BRA     #Go_Circle
+     68            
+     69          }
+     70          
+
+   \                                 In  segment CODE, align 2
+     71          void Go_Triangle(void){
+   \                     Go_Triangle:
+     72            time_delay(TRIANGLE_DELAY);
+   \   000000   3C400F00     MOV.W   #0xf, R12
+   \   000004   ........     CALLA   #time_delay
+     73            Go_Straight(LENGTH);
+   \   000008   3C408C00     MOV.W   #0x8c, R12
+   \   00000C   ........     CALLA   #Go_Straight
+     74            time_delay(TRIANGLE_DELAY);
+   \   000010   3C400F00     MOV.W   #0xf, R12
+   \   000014   ........     CALLA   #time_delay
+     75            Go_Angle(ANGLE);
+   \   000018   3C40A500     MOV.W   #0xa5, R12
+   \   00001C   ........     CALLA   #Go_Angle
+     76            time_delay(TRIANGLE_DELAY);
+   \   000020   3C400F00     MOV.W   #0xf, R12
+   \   000024   ........     CALLA   #time_delay
+     77            Go_Straight(LENGTH);
+   \   000028   3C408C00     MOV.W   #0x8c, R12
+   \   00002C   ........     CALLA   #Go_Straight
+     78            time_delay(TRIANGLE_DELAY);
+   \   000030   3C400F00     MOV.W   #0xf, R12
+   \   000034   ........     CALLA   #time_delay
+     79            Go_Angle(ANGLE);
+   \   000038   3C40A500     MOV.W   #0xa5, R12
+   \   00003C   ........     CALLA   #Go_Angle
+     80            time_delay(TRIANGLE_DELAY);
+   \   000040   3C400F00     MOV.W   #0xf, R12
+   \   000044   ........     CALLA   #time_delay
+     81            Go_Straight(LENGTH);
+   \   000048   3C408C00     MOV.W   #0x8c, R12
+   \   00004C   ........     CALLA   #Go_Straight
+     82            time_delay(TRIANGLE_DELAY);
+   \   000050   3C400F00     MOV.W   #0xf, R12
+   \   000054   ........     CALLA   #time_delay
+     83            Go_Angle(ANGLE);
+   \   000058   3C40A500     MOV.W   #0xa5, R12
+   \   00005C   ........     CALLA   #Go_Angle
+     84            time_delay(TRIANGLE_DELAY);
+   \   000060   3C400F00     MOV.W   #0xf, R12
+   \   000064   ........     CALLA   #time_delay
+     85            Go_Straight(LENGTH);
+   \   000068   3C408C00     MOV.W   #0x8c, R12
+   \   00006C   ........     CALLA   #Go_Straight
+     86            time_delay(TRIANGLE_DELAY);
+   \   000070   3C400F00     MOV.W   #0xf, R12
+   \   000074   ........     CALLA   #time_delay
+     87            Go_Angle(ANGLE);
+   \   000078   3C40A500     MOV.W   #0xa5, R12
+   \   00007C   ........     CALLA   #Go_Angle
+     88            time_delay(TRIANGLE_DELAY);
+   \   000080   3C400F00     MOV.W   #0xf, R12
+   \   000084   ........     CALLA   #time_delay
+     89            Go_Straight(LENGTH);
+   \   000088   3C408C00     MOV.W   #0x8c, R12
+   \   00008C   ........     CALLA   #Go_Straight
+     90            time_delay(TRIANGLE_DELAY);
+   \   000090   3C400F00     MOV.W   #0xf, R12
+   \   000094   ........     CALLA   #time_delay
+     91            Go_Angle(ANGLE);
+   \   000098   3C40A500     MOV.W   #0xa5, R12
+   \   00009C   ........     CALLA   #Go_Angle
+     92            time_delay(TRIANGLE_DELAY);   
+   \   0000A0   3C400F00     MOV.W   #0xf, R12
+   \   0000A4   ........     CALLA   #time_delay
+     93            Go_Straight(LENGTH);;
+   \   0000A8   3C408C00     MOV.W   #0x8c, R12
+   \   0000AC   ........     CALLA   #Go_Straight
+     94            time_delay(TRIANGLE_DELAY);
+   \   0000B0   3C400F00     MOV.W   #0xf, R12
+   \   0000B4   ........     BRA     #time_delay
+     95            
+     96          }
+     97          
+
+   \                                 In  segment CODE, align 2
+     98          void Go_Angle(int angle){
+   \                     Go_Angle:
+     99            my_clock = RESET;
+   \   000000   8243....     MOV.W   #0x0, &my_clock
+   \   000004   8243....     MOV.W   #0x0, &my_clock + 2
+    100            P6OUT &= ~R_FORWARD;
+   \   000008   D2C34302     BIC.B   #0x1, &0x243
+    101            P6OUT &= ~L_FORWARD;
+   \   00000C   E2C34302     BIC.B   #0x2, &0x243
+    102            while(my_clock<angle){
+   \                     ??Go_Angle_0:
+   \   000010   0D4C         MOV.W   R12, R13
+   \   000012   0D5D         RLA.W   R13
+   \   000014   0D7D         SUBC.W  R13, R13
+   \   000016   3DE3         XOR.W   #0xffff, R13
+   \   000018   829D....     CMP.W   R13, &my_clock + 2
+   \   00001C   0438         JL      ??Go_Angle_1
+   \   00001E   1120         JNE     ??Go_Angle_2
+   \   000020   829C....     CMP.W   R12, &my_clock
+   \   000024   0E2C         JC      ??Go_Angle_2
+    103              P6OUT |= R_FORWARD;
+   \                     ??Go_Angle_1:
+   \   000026   D2D34302     BIS.B   #0x1, &0x243
+    104              if(Old_Time_Sequence != Time_Sequence){
+   \   00002A   9292........ CMP.W   &Time_Sequence, &Old_Time_Sequence
+   \   000030   EF27         JEQ     ??Go_Angle_0
+    105                Old_Time_Sequence = Time_Sequence;
+   \   000032   9242........ MOV.W   &Time_Sequence, &Old_Time_Sequence
+    106                my_clock++;
+   \   000038   9253....     ADD.W   #0x1, &my_clock
+   \   00003C   8263....     ADDC.W  #0x0, &my_clock + 2
+   \   000040   E73F         JMP     ??Go_Angle_0
+    107              }
+    108            }
+    109            P6OUT &= ~R_FORWARD;
+   \                     ??Go_Angle_2:
+   \   000042   D2C34302     BIC.B   #0x1, &0x243
+    110            
+    111          }
+   \   000046   1001         RETA
+   \   000048                REQUIRE _A_PCOUT_L
+    112          
+
+   \                                 In  segment CODE, align 2
+    113          void Go_Straight(int length){
+   \                     Go_Straight:
+    114            my_clock = RESET;
+   \   000000   8243....     MOV.W   #0x0, &my_clock
+   \   000004   8243....     MOV.W   #0x0, &my_clock + 2
+    115            P6OUT &= ~R_FORWARD;
+   \   000008   D2C34302     BIC.B   #0x1, &0x243
+    116            P6OUT &= ~L_FORWARD;
+   \   00000C   E2C34302     BIC.B   #0x2, &0x243
+    117            while(my_clock<length){
+   \                     ??Go_Straight_0:
+   \   000010   0D4C         MOV.W   R12, R13
+   \   000012   0D5D         RLA.W   R13
+   \   000014   0D7D         SUBC.W  R13, R13
+   \   000016   3DE3         XOR.W   #0xffff, R13
+   \   000018   829D....     CMP.W   R13, &my_clock + 2
+   \   00001C   0438         JL      ??Go_Straight_1
+   \   00001E   1320         JNE     ??Go_Straight_2
+   \   000020   829C....     CMP.W   R12, &my_clock
+   \   000024   102C         JC      ??Go_Straight_2
+    118              P6OUT |= R_FORWARD;
+   \                     ??Go_Straight_1:
+   \   000026   D2D34302     BIS.B   #0x1, &0x243
+    119              P6OUT |= L_FORWARD;
+   \   00002A   E2D34302     BIS.B   #0x2, &0x243
+    120              if(Old_Time_Sequence != Time_Sequence){
+   \   00002E   9292........ CMP.W   &Time_Sequence, &Old_Time_Sequence
+   \   000034   ED27         JEQ     ??Go_Straight_0
+    121                Old_Time_Sequence = Time_Sequence;
+   \   000036   9242........ MOV.W   &Time_Sequence, &Old_Time_Sequence
+    122                my_clock++;
+   \   00003C   9253....     ADD.W   #0x1, &my_clock
+   \   000040   8263....     ADDC.W  #0x0, &my_clock + 2
+   \   000044   E53F         JMP     ??Go_Straight_0
+    123              }
+    124            }
+    125            P6OUT &= ~R_FORWARD;
+   \                     ??Go_Straight_2:
+   \   000046   D2C34302     BIC.B   #0x1, &0x243
+    126            P6OUT &= ~L_FORWARD;
+   \   00004A   E2C34302     BIC.B   #0x2, &0x243
+    127          }
+   \   00004E   1001         RETA
+   \   000050                REQUIRE _A_PCOUT_L
+    128          
+
+   \                                 In  segment CODE, align 2
+    129          void time_delay(int time){
+   \                     time_delay:
+    130            my_clock = RESET;
+   \   000000   8243....     MOV.W   #0x0, &my_clock
+   \   000004   8243....     MOV.W   #0x0, &my_clock + 2
+    131            while(my_clock<time){
+   \                     ??time_delay_0:
+   \   000008   0D4C         MOV.W   R12, R13
+   \   00000A   0D5D         RLA.W   R13
+   \   00000C   0D7D         SUBC.W  R13, R13
+   \   00000E   3DE3         XOR.W   #0xffff, R13
+   \   000010   829D....     CMP.W   R13, &my_clock + 2
+   \   000014   0438         JL      ??time_delay_1
+   \   000016   0F20         JNE     ??time_delay_2
+   \   000018   829C....     CMP.W   R12, &my_clock
+   \   00001C   0C2C         JC      ??time_delay_2
+    132              if(Old_Time_Sequence != Time_Sequence){
+   \                     ??time_delay_1:
+   \   00001E   9292........ CMP.W   &Time_Sequence, &Old_Time_Sequence
+   \   000024   F127         JEQ     ??time_delay_0
+    133                Old_Time_Sequence = Time_Sequence;
+   \   000026   9242........ MOV.W   &Time_Sequence, &Old_Time_Sequence
+    134                my_clock++;
+   \   00002C   9253....     ADD.W   #0x1, &my_clock
+   \   000030   8263....     ADDC.W  #0x0, &my_clock + 2
+   \   000034   E93F         JMP     ??time_delay_0
+    135              }
+    136            } 
+    137          }  
+   \                     ??time_delay_2:
+   \   000036   1001         RETA
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   Go_Angle
+      4   Go_Circle
+      4   Go_Eight
+        0   -> Go_Circle
+        4   -> Go_Circle
+      4   Go_Straight
+      4   Go_Triangle
+        4   -> Go_Angle
+        4   -> Go_Straight
+        0   -> time_delay
+        4   -> time_delay
+      4   time_delay
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      72  Go_Angle
+     148  Go_Circle
+      28  Go_Eight
+      80  Go_Straight
+     184  Go_Triangle
+       2  Old_Time_Sequence
+       2  _A_PCOUT_L
+      56  time_delay
+
+ 
+ 568 bytes in segment CODE
+   2 bytes in segment DATA16_AN
+   2 bytes in segment DATA16_Z
+ 
+ 568 bytes of CODE memory
+   2 bytes of DATA memory (+ 2 bytes shared)
+
+Errors: none
+Warnings: none

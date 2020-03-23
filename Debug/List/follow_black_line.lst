@@ -1,0 +1,516 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:12
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\follow_black_line.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWAFF6.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\follow_black_line.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\follow_black_line.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\follow_black_line.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\follow_black_line.c
+      1          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x454
+   \   union <unnamed> _A_TB3CCR1_L
+   \                     _A_TB3CCR1_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x456
+   \   union <unnamed> _A_TB3CCR2_L
+   \                     _A_TB3CCR2_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x458
+   \   union <unnamed> _A_TB3CCR3_L
+   \                     _A_TB3CCR3_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x45a
+   \   union <unnamed> _A_TB3CCR4_L
+   \                     _A_TB3CCR4_L:
+   \   000000                DS8 2
+      2          #include "msp430fr2355.h"
+      3          #include "macros.h"
+      4          #include "functions.h"
+      5          
+      6          extern volatile int ADC_Left_Detect;
+      7          extern volatile int ADC_Right_Detect;
+      8          extern volatile unsigned int pulse;
+      9          extern volatile unsigned int counter;
+     10          extern volatile unsigned int blackline_counter;
+     11          extern int on_blackline;
+     12          extern int blackline_position;
+     13          extern int car_position;
+     14          extern volatile unsigned int ready_to_move_counter;
+     15          
+     16          extern int switch_toggle;
+     17          extern int movement_states;
+     18          
+     19          extern int follow_Flag;
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     20          int following_state;
+   \                     following_state:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     21          int previous_follow_state = RESET;
+   \                     previous_follow_state:
+   \   000000                DS8 2
+     22          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     23          int turn_90_state = RESET;
+   \                     turn_90_state:
+   \   000000                DS8 2
+     24          
+     25          extern volatile unsigned int follow_counter;
+     26          
+     27          
+
+   \                                 In  segment CODE, align 2
+     28          void follow_BlackLine(void){
+   \                     follow_BlackLine:
+     29            
+     30            switch(following_state){
+   \   000000   1F42....     MOV.W   &following_state, R15
+   \   000004   0F83         SUB.W   #0x0, R15
+   \   000006   1124         JEQ     ??follow_BlackLine_17
+   \   000008   1F83         SUB.W   #0x1, R15
+   \   00000A   1B24         JEQ     ??follow_BlackLine_18
+   \   00000C   1F83         SUB.W   #0x1, R15
+   \   00000E   3D24         JEQ     ??follow_BlackLine_19
+   \   000010   1F83         SUB.W   #0x1, R15
+   \   000012   7624         JEQ     ??follow_BlackLine_20
+   \   000014   2F83         SUB.W   #0x2, R15
+   \   000016   DA24         JEQ     ??follow_BlackLine_21
+   \   000018   2F83         SUB.W   #0x2, R15
+   \   00001A   BD24         JEQ     ??follow_BlackLine_22
+   \   00001C   1F83         SUB.W   #0x1, R15
+   \   00001E   CA24         JEQ     ??follow_BlackLine_23
+   \   000020   2F83         SUB.W   #0x2, R15
+   \   000022   DD24         JEQ     ??follow_BlackLine_16
+   \   000024   1F83         SUB.W   #0x1, R15
+   \   000026   AF24         JEQ     ??follow_BlackLine_24
+   \   000028   1001         RETA
+     31              
+     32              
+     33              /* ------------------------------HOLDING STATE---------------------------------------- */
+     34              
+     35              
+     36            case FOLLOW_HOLD:
+     37              if(follow_Flag){
+   \                     ??follow_BlackLine_17:
+   \   00002A   8293....     CMP.W   #0x0, &follow_Flag
+   \   00002E   0624         JEQ     ??follow_BlackLine_25
+     38                car_forward_medium();
+   \   000030   ........     CALLA   #car_forward_medium
+     39                follow_counter = RESET;
+   \   000034   8243....     MOV.W   #0x0, &follow_counter
+     40                following_state = FOLLOW_START;
+   \   000038   9243....     MOV.W   #0x1, &following_state
+     41              }
+     42              counter = RESET;
+   \                     ??follow_BlackLine_25:
+   \   00003C   8243....     MOV.W   #0x0, &counter
+     43              break;
+   \   000040   1001         RETA
+     44              
+     45              
+     46              /* -------------------------------STARTING STATE---------------------------------------- */
+     47              
+     48              
+     49            case FOLLOW_START:                            // CHECKING WHERE THE CAR IS
+     50              switch(check_BlackLine()){
+   \                     ??follow_BlackLine_18:
+   \   000042   ........     CALLA   #check_BlackLine
+   \   000046   0C83         SUB.W   #0x0, R12
+   \   000048   1024         JEQ     ??follow_BlackLine_26
+   \   00004A   1C83         SUB.W   #0x1, R12
+   \   00004C   0B24         JEQ     ??follow_BlackLine_27
+   \   00004E   1C83         SUB.W   #0x1, R12
+   \   000050   0624         JEQ     ??follow_BlackLine_28
+   \   000052   1C83         SUB.W   #0x1, R12
+   \   000054   0C20         JNE     ??follow_BlackLine_6
+     51              case LB_RW:                                 // CAR IS ON LEFT BLACK RIGHT WHITE
+     52                previous_follow_state = LB_RW;
+   \   000056   B2400300.... MOV.W   #0x3, &previous_follow_state
+     53                break;
+   \   00005C   083C         JMP     ??follow_BlackLine_6
+     54              case LW_RB:                                 // CAR IS ON LEFT WHITE RIGHT BLACK
+     55                previous_follow_state = LW_RB;
+   \                     ??follow_BlackLine_28:
+   \   00005E   A243....     MOV.W   #0x2, &previous_follow_state
+     56                break;
+   \   000062   053C         JMP     ??follow_BlackLine_6
+     57              case BOTH:                                  // CAR IS CURRENTLY ON BLACK LINE
+     58                previous_follow_state = BOTH;
+   \                     ??follow_BlackLine_27:
+   \   000064   9243....     MOV.W   #0x1, &previous_follow_state
+     59                break;
+   \   000068   023C         JMP     ??follow_BlackLine_6
+     60              case OFF:                                   // CAR IS CURRENTLY OFF THE BLACK LINE
+     61                previous_follow_state = OFF;
+   \                     ??follow_BlackLine_26:
+   \   00006A   8243....     MOV.W   #0x0, &previous_follow_state
+     62                break;
+     63              }
+     64              if(car_position==LB_RW) following_state = FOLLOW_CORRECT_LB_RW;
+   \                     ??follow_BlackLine_6:
+   \   00006E   B2900300.... CMP.W   #0x3, &car_position
+   \   000074   0320         JNE     ??follow_BlackLine_29
+   \   000076   A243....     MOV.W   #0x2, &following_state
+   \   00007A   1001         RETA
+     65              else if(car_position==LW_RB) following_state= FOLLOW_CORRECT_LW_RB;
+   \                     ??follow_BlackLine_29:
+   \   00007C   A293....     CMP.W   #0x2, &car_position
+   \   000080   AE20         JNE     ??follow_BlackLine_16
+   \   000082   B2400300.... MOV.W   #0x3, &following_state
+     66              break;
+   \   000088   1001         RETA
+     67              
+     68              
+     69              /* ------------------------------- LEFT BLACK RIGHT WHITE ----------------------------- */
+     70              
+     71              
+     72            case FOLLOW_CORRECT_LB_RW:                    // CORRECTION OF THE MISTAKE IF FOLLOWING LB RW
+     73              switch(check_BlackLine()){
+   \                     ??follow_BlackLine_19:
+   \   00008A   ........     CALLA   #check_BlackLine
+   \   00008E   0C83         SUB.W   #0x0, R12
+   \   000090   1F24         JEQ     ??follow_BlackLine_30
+   \   000092   1C83         SUB.W   #0x1, R12
+   \   000094   0A24         JEQ     ??follow_BlackLine_31
+   \   000096   1C83         SUB.W   #0x1, R12
+   \   000098   0524         JEQ     ??follow_BlackLine_32
+   \   00009A   1C83         SUB.W   #0x1, R12
+   \   00009C   2E20         JNE     ??follow_BlackLine_1
+     74              case LB_RW:
+     75                car_forward_fast();
+   \   00009E   ........     CALLA   #car_forward_fast
+     76                break;
+   \   0000A2   2B3C         JMP     ??follow_BlackLine_1
+     77              case LW_RB:
+     78                move_clockwise_follow();
+   \                     ??follow_BlackLine_32:
+   \   0000A4   ........     CALLA   #move_clockwise_follow
+     79                break;
+   \   0000A8   283C         JMP     ??follow_BlackLine_1
+     80              case BOTH:
+     81                switch(previous_follow_state){
+   \                     ??follow_BlackLine_31:
+   \   0000AA   1F42....     MOV.W   &previous_follow_state, R15
+   \   0000AE   0F83         SUB.W   #0x0, R15
+   \   0000B0   2424         JEQ     ??follow_BlackLine_1
+   \   0000B2   1F83         SUB.W   #0x1, R15
+   \   0000B4   0A24         JEQ     ??follow_BlackLine_33
+   \   0000B6   1F83         SUB.W   #0x1, R15
+   \   0000B8   0524         JEQ     ??follow_BlackLine_34
+   \   0000BA   1F83         SUB.W   #0x1, R15
+   \   0000BC   1E20         JNE     ??follow_BlackLine_1
+     82                case LB_RW:
+     83                  move_clockwise_follow();
+   \   0000BE   ........     CALLA   #move_clockwise_follow
+     84                  break;
+   \   0000C2   1B3C         JMP     ??follow_BlackLine_1
+     85                case LW_RB:
+     86                  move_clockwise_follow();
+   \                     ??follow_BlackLine_34:
+   \   0000C4   ........     CALLA   #move_clockwise_follow
+     87                  break;
+   \   0000C8   183C         JMP     ??follow_BlackLine_1
+     88                case BOTH:
+     89                  move_clockwise_follow();
+   \                     ??follow_BlackLine_33:
+   \   0000CA   ........     CALLA   #move_clockwise_follow
+     90                  break;
+     91                case OFF:
+     92                  break;
+     93                }
+     94                break;
+   \   0000CE   153C         JMP     ??follow_BlackLine_1
+     95              case OFF:
+     96                switch(previous_follow_state){
+   \                     ??follow_BlackLine_30:
+   \   0000D0   1F42....     MOV.W   &previous_follow_state, R15
+   \   0000D4   0F83         SUB.W   #0x0, R15
+   \   0000D6   0F24         JEQ     ??follow_BlackLine_35
+   \   0000D8   1F83         SUB.W   #0x1, R15
+   \   0000DA   0A24         JEQ     ??follow_BlackLine_36
+   \   0000DC   1F83         SUB.W   #0x1, R15
+   \   0000DE   0524         JEQ     ??follow_BlackLine_37
+   \   0000E0   1F83         SUB.W   #0x1, R15
+   \   0000E2   0B20         JNE     ??follow_BlackLine_1
+     97                case LB_RW:
+     98                  move_counterclockwise_follow();
+   \   0000E4   ........     CALLA   #move_counterclockwise_follow
+     99                  break;
+   \   0000E8   083C         JMP     ??follow_BlackLine_1
+    100                case LW_RB:
+    101                  move_clockwise_follow();
+   \                     ??follow_BlackLine_37:
+   \   0000EA   ........     CALLA   #move_clockwise_follow
+    102                  break;
+   \   0000EE   053C         JMP     ??follow_BlackLine_1
+    103                case BOTH:
+    104                  car_forward_fast();
+   \                     ??follow_BlackLine_36:
+   \   0000F0   ........     CALLA   #car_forward_fast
+    105                  break;
+   \   0000F4   023C         JMP     ??follow_BlackLine_1
+    106                case OFF:
+    107                  move_counterclockwise_follow();
+   \                     ??follow_BlackLine_35:
+   \   0000F6   ........     CALLA   #move_counterclockwise_follow
+    108                  break;
+    109                }
+    110                break;
+    111              }
+    112              following_state = FOLLOW_START;
+   \                     ??follow_BlackLine_1:
+   \   0000FA   9243....     MOV.W   #0x1, &following_state
+    113              break;
+   \   0000FE   1001         RETA
+    114              
+    115              
+    116              /*----------------------------------LEFT WHITE RIGHT BLACK -------------------------------------- */
+    117              
+    118              
+    119            case FOLLOW_CORRECT_LW_RB:                    // CORRECTION IF LW RB
+    120              switch(check_BlackLine()){
+   \                     ??follow_BlackLine_20:
+   \   000100   ........     CALLA   #check_BlackLine
+   \   000104   0C83         SUB.W   #0x0, R12
+   \   000106   1F24         JEQ     ??follow_BlackLine_38
+   \   000108   1C83         SUB.W   #0x1, R12
+   \   00010A   0A24         JEQ     ??follow_BlackLine_39
+   \   00010C   1C83         SUB.W   #0x1, R12
+   \   00010E   0524         JEQ     ??follow_BlackLine_40
+   \   000110   1C83         SUB.W   #0x1, R12
+   \   000112   2E20         JNE     ??follow_BlackLine_3
+    121              case LB_RW:
+    122                move_counterclockwise_follow();
+   \   000114   ........     CALLA   #move_counterclockwise_follow
+    123                break;
+   \   000118   2B3C         JMP     ??follow_BlackLine_3
+    124              case LW_RB:
+    125                car_forward_fast();
+   \                     ??follow_BlackLine_40:
+   \   00011A   ........     CALLA   #car_forward_fast
+    126                break;
+   \   00011E   283C         JMP     ??follow_BlackLine_3
+    127              case BOTH:
+    128                switch(previous_follow_state){
+   \                     ??follow_BlackLine_39:
+   \   000120   1F42....     MOV.W   &previous_follow_state, R15
+   \   000124   0F83         SUB.W   #0x0, R15
+   \   000126   2424         JEQ     ??follow_BlackLine_3
+   \   000128   1F83         SUB.W   #0x1, R15
+   \   00012A   0A24         JEQ     ??follow_BlackLine_41
+   \   00012C   1F83         SUB.W   #0x1, R15
+   \   00012E   0524         JEQ     ??follow_BlackLine_42
+   \   000130   1F83         SUB.W   #0x1, R15
+   \   000132   1E20         JNE     ??follow_BlackLine_3
+    129                case LB_RW:
+    130                  move_counterclockwise_follow();
+   \   000134   ........     CALLA   #move_counterclockwise_follow
+    131                  break;
+   \   000138   1B3C         JMP     ??follow_BlackLine_3
+    132                case LW_RB:
+    133                  move_counterclockwise_follow();
+   \                     ??follow_BlackLine_42:
+   \   00013A   ........     CALLA   #move_counterclockwise_follow
+    134                  break;
+   \   00013E   183C         JMP     ??follow_BlackLine_3
+    135                case BOTH:
+    136                  move_counterclockwise_follow();
+   \                     ??follow_BlackLine_41:
+   \   000140   ........     CALLA   #move_counterclockwise_follow
+    137                  break;
+    138                case OFF:
+    139                  break;
+    140                }
+    141                break;
+   \   000144   153C         JMP     ??follow_BlackLine_3
+    142              case OFF:
+    143                switch(previous_follow_state){
+   \                     ??follow_BlackLine_38:
+   \   000146   1F42....     MOV.W   &previous_follow_state, R15
+   \   00014A   0F83         SUB.W   #0x0, R15
+   \   00014C   0F24         JEQ     ??follow_BlackLine_43
+   \   00014E   1F83         SUB.W   #0x1, R15
+   \   000150   0A24         JEQ     ??follow_BlackLine_44
+   \   000152   1F83         SUB.W   #0x1, R15
+   \   000154   0524         JEQ     ??follow_BlackLine_45
+   \   000156   1F83         SUB.W   #0x1, R15
+   \   000158   0B20         JNE     ??follow_BlackLine_3
+    144                case LB_RW:
+    145                  move_counterclockwise_follow();
+   \   00015A   ........     CALLA   #move_counterclockwise_follow
+    146                  break;
+   \   00015E   083C         JMP     ??follow_BlackLine_3
+    147                case LW_RB:
+    148                  move_clockwise_follow();
+   \                     ??follow_BlackLine_45:
+   \   000160   ........     CALLA   #move_clockwise_follow
+    149                  break;
+   \   000164   053C         JMP     ??follow_BlackLine_3
+    150                case BOTH:
+    151                  move_counterclockwise_follow();
+   \                     ??follow_BlackLine_44:
+   \   000166   ........     CALLA   #move_counterclockwise_follow
+    152                  break;
+   \   00016A   023C         JMP     ??follow_BlackLine_3
+    153                case OFF:
+    154                  move_clockwise_follow();
+   \                     ??follow_BlackLine_43:
+   \   00016C   ........     CALLA   #move_clockwise_follow
+    155                  break;
+    156                }
+    157                break;
+    158              }
+    159              if(counter < CIRCLE_2) following_state = FOLLOW_START;
+   \                     ??follow_BlackLine_3:
+   \   000170   B2907C16.... CMP.W   #0x167c, &counter
+   \   000176   032C         JC      ??follow_BlackLine_46
+   \   000178   9243....     MOV.W   #0x1, &following_state
+   \   00017C   1001         RETA
+    160              else following_state = FOLLOW_DONE;
+   \                     ??follow_BlackLine_46:
+   \   00017E   B2400B00.... MOV.W   #0xb, &following_state
+    161              
+    162              break;
+   \   000184   1001         RETA
+    163              /* --------------------------------------DONE WITH THE CIRCLE --------------------------------- */
+    164            case FOLLOW_DONE:
+    165              stop_car();
+   \                     ??follow_BlackLine_24:
+   \   000186   ........     CALLA   #stop_car
+    166              counter = RESET;
+   \   00018A   8243....     MOV.W   #0x0, &counter
+    167              following_state = TURN_90;
+   \   00018E   B2400700.... MOV.W   #0x7, &following_state
+    168              break;
+   \   000194   1001         RETA
+    169            case TURN_90:
+    170              counter = RESET;
+   \                     ??follow_BlackLine_22:
+   \   000196   8243....     MOV.W   #0x0, &counter
+    171              following_state = TURN_90_FINISHED;
+   \   00019A   B242....     MOV.W   #0x8, &following_state
+    172              RIGHT_FORWARD_SPEED = STOP;
+   \   00019E   82435404     MOV.W   #0x0, &0x454
+    173              LEFT_FORWARD_SPEED = LEFT_MEDIUM;
+   \   0001A2   B240EE025604 MOV.W   #0x2ee, &0x456
+    174              RIGHT_REVERSE_SPEED = RIGHT_MEDIUM;
+   \   0001A8   B24020035804 MOV.W   #0x320, &0x458
+    175              LEFT_REVERSE_SPEED = STOP;
+   \   0001AE   82435A04     MOV.W   #0x0, &0x45a
+    176              break;
+   \   0001B2   1001         RETA
+    177            case TURN_90_FINISHED:
+    178              if(counter> TURN90_TIME){
+   \                     ??follow_BlackLine_23:
+   \   0001B4   B290A100.... CMP.W   #0xa1, &counter
+   \   0001BA   1128         JNC     ??follow_BlackLine_16
+    179                car_forward_fast();
+   \   0001BC   ........     CALLA   #car_forward_fast
+    180                counter = RESET;
+   \   0001C0   8243....     MOV.W   #0x0, &counter
+    181                following_state = MOVE_TO_MIDDLE;
+   \   0001C4   B2400500.... MOV.W   #0x5, &following_state
+    182              }
+    183              break;
+   \   0001CA   1001         RETA
+    184            case MOVE_TO_MIDDLE:
+    185            if(counter > MOVE_TO_CENTER_TIME){
+   \                     ??follow_BlackLine_21:
+   \   0001CC   B290FB00.... CMP.W   #0xfb, &counter
+   \   0001D2   0528         JNC     ??follow_BlackLine_16
+    186              stop_car();
+   \   0001D4   ........     CALLA   #stop_car
+    187              following_state = PROJECT_7_FINISHED;
+   \   0001D8   B2400A00.... MOV.W   #0xa, &following_state
+    188            }
+    189            break;
+    190            case PROJECT_7_FINISHED:
+    191              break;
+    192            }
+    193          }
+   \                     ??follow_BlackLine_16:
+   \   0001DE   1001         RETA
+   \   0001E0                REQUIRE _A_TB3CCR1_L
+   \   0001E0                REQUIRE _A_TB3CCR2_L
+   \   0001E0                REQUIRE _A_TB3CCR3_L
+   \   0001E0                REQUIRE _A_TB3CCR4_L
+    194          
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   follow_BlackLine
+        4   -> car_forward_fast
+        4   -> car_forward_medium
+        4   -> check_BlackLine
+        4   -> move_clockwise_follow
+        4   -> move_counterclockwise_follow
+        4   -> stop_car
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  _A_TB3CCR1_L
+       2  _A_TB3CCR2_L
+       2  _A_TB3CCR3_L
+       2  _A_TB3CCR4_L
+     480  follow_BlackLine
+       2  following_state
+       2  previous_follow_state
+       2  turn_90_state
+
+ 
+ 480 bytes in segment CODE
+   8 bytes in segment DATA16_AN
+   6 bytes in segment DATA16_Z
+ 
+ 480 bytes of CODE memory
+   6 bytes of DATA memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none

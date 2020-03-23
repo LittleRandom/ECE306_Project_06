@@ -1,0 +1,133 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           02/Feb/2020  12:18:04
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 04\circle.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWFC24.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 04\circle.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 04\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 04\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 04\Debug\List\circle.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 04\Debug\Obj\circle.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 04\circle.c
+      1          //******************************************************************************
+      2          //  File Name: circle.c
+      3          //
+      4          //  Description: Function to make car go in circle.
+      5          //
+      6          //  Quoc Chuong Vu
+      7          //  Jan 2020
+      8          //  Built with IAR Embedded Workbench Version: V4.10A/W32 (7.12.4)
+      9          //******************************************************************************
+     10          
+     11          #include "macros.h"
+     12          #include "functions.h"
+     13          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x242
+   \   union <unnamed> _A_PCOUT_L
+   \                     _A_PCOUT_L:
+   \   000000                DS8 2
+     14          #include  <string.h>
+     15          
+     16          extern char display_line[NUM_LINE][DISPLAY_NUM_INDEX];
+     17          extern char *display[NUM_LINE];
+     18          extern unsigned char display_mode;
+     19          extern volatile unsigned char display_changed;
+     20          extern volatile unsigned char update_display;
+     21          extern volatile unsigned int update_display_count;
+     22          extern volatile unsigned int Time_Sequence;
+     23          
+     24          extern unsigned int motor_state_check;
+     25          
+
+   \                                 In  segment CODE, align 2
+     26          void Go_Circle(void){
+   \                     Go_Circle:
+     27              P6OUT |= R_FORWARD;
+   \   000000   D2D34302     BIS.B   #0x1, &0x243
+     28              P6OUT |= L_FORWARD;
+   \   000004   E2D34302     BIS.B   #0x2, &0x243
+     29          }
+   \   000008   1001         RETA
+   \   00000A                REQUIRE _A_PCOUT_L
+     30          
+
+   \                                 In  segment CODE, align 2
+     31          void Go_Eight(void){
+   \                     Go_Eight:
+     32            P6OUT |= R_FORWARD;
+   \   000000   D2D34302     BIS.B   #0x1, &0x243
+     33            P6OUT |= L_FORWARD;
+   \   000004   E2D34302     BIS.B   #0x2, &0x243
+     34          }
+   \   000008   1001         RETA
+   \   00000A                REQUIRE _A_PCOUT_L
+     35          
+
+   \                                 In  segment CODE, align 2
+     36          void Go_Triangle(void){
+   \                     Go_Triangle:
+     37            P6OUT |= R_FORWARD;
+   \   000000   D2D34302     BIS.B   #0x1, &0x243
+     38            P6OUT |= L_FORWARD;
+   \   000004   E2D34302     BIS.B   #0x2, &0x243
+     39          }
+   \   000008   1001         RETA
+   \   00000A                REQUIRE _A_PCOUT_L
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   Go_Circle
+      4   Go_Eight
+      4   Go_Triangle
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      10  Go_Circle
+      10  Go_Eight
+      10  Go_Triangle
+       2  _A_PCOUT_L
+
+ 
+ 30 bytes in segment CODE
+  2 bytes in segment DATA16_AN
+ 
+ 30 bytes of CODE memory
+  0 bytes of DATA memory (+ 2 bytes shared)
+
+Errors: none
+Warnings: none

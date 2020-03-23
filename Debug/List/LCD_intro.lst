@@ -1,0 +1,376 @@
+###############################################################################
+#
+# IAR C/C++ Compiler V7.12.3.989/W32 for MSP430           05/Mar/2020  15:49:13
+# Copyright 1996-2019 IAR Systems AB.
+# PC-locked license - IAR Embedded Workbench for MSP430, 8K KickStart Edition 7.12
+#
+#    __rt_version  =  3
+#    __double_size =  32
+#    __reg_r4      =  free
+#    __reg_r5      =  free
+#    __pic         =  no
+#    __core        =  430X
+#    __data_model  =  small
+#    __code_model  =  large
+#    Source file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\LCD_intro.c
+#    Command line  =  
+#        -f C:\Users\LITTLE~1\AppData\Local\Temp\EWB3F4.tmp
+#        ("C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\LCD_intro.c" -lC
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List" -o
+#        "C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj" --no_cse --no_unroll --no_inline
+#        --no_code_motion --no_tbaa --debug -D__MSP430FR2355__ -e --double=32
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\430\lib\dlib\dl430xlsfn.h" -I ./\ --core=430X --data_model=small
+#        -On --multiplier=32 --hw_workaround=CPU40 --code_model=large)
+#    Locale        =  English_USA.1252
+#    List file     =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\List\LCD_intro.lst
+#    Object file   =  
+#        C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE
+#        306\Projects\Project 06\Debug\Obj\LCD_intro.r43
+#
+###############################################################################
+
+C:\Users\LittleRandom\Documents\NCSU\3_Junior\Spring Term 2020\ECE 306\Projects\Project 06\LCD_intro.c
+      1          #include "macros.h"
+      2          #include <string.h>
+      3          #include "functions.h"
+      4          #include "msp430.h"
+      5          #include "msp430fr2355.h"
+      6          
+      7          extern char display_line[4][11];
+      8          extern char *display[4];
+      9          extern int display_code;
+     10          extern volatile unsigned long int Time_Sequence;
+     11          extern volatile unsigned char display_changed;
+     12          extern volatile unsigned char update_display;
+     13          extern volatile unsigned int counter;
+     14          
+
+   \                                 In  segment CODE, align 2
+     15          void LCD_intro(void){
+   \                     LCD_intro:
+   \   000000   0A12         PUSH.W  R10
+     16            if(counter<1250){
+   \   000002   B290E204.... CMP.W   #0x4e2, &counter
+   \   000008   042C         JC      ??LCD_intro_1
+     17              Time_Sequence = 0;
+   \   00000A   8243....     MOV.W   #0x0, &Time_Sequence
+   \   00000E   8243....     MOV.W   #0x0, &Time_Sequence + 2
+     18            }
+     19            
+     20            int check_counter;
+     21            
+     22            if(counter > 200) check_counter = 0;
+   \                     ??LCD_intro_1:
+   \   000012   B290C900.... CMP.W   #0xc9, &counter
+   \   000018   0128         JNC     ??LCD_intro_2
+   \   00001A   0A43         MOV.W   #0x0, R10
+     23            if(counter > 500) check_counter = 1;
+   \                     ??LCD_intro_2:
+   \   00001C   B290F501.... CMP.W   #0x1f5, &counter
+   \   000022   0128         JNC     ??LCD_intro_3
+   \   000024   1A43         MOV.W   #0x1, R10
+     24            if(counter > 800) check_counter = 2;
+   \                     ??LCD_intro_3:
+   \   000026   B2902103.... CMP.W   #0x321, &counter
+   \   00002C   0128         JNC     ??LCD_intro_4
+   \   00002E   2A43         MOV.W   #0x2, R10
+     25            if(counter > 1200) check_counter = 3;
+   \                     ??LCD_intro_4:
+   \   000030   B290B104.... CMP.W   #0x4b1, &counter
+   \   000036   0228         JNC     ??LCD_intro_5
+   \   000038   3A400300     MOV.W   #0x3, R10
+     26            if(counter > 1250) check_counter = 4;
+   \                     ??LCD_intro_5:
+   \   00003C   B290E304.... CMP.W   #0x4e3, &counter
+   \   000042   0128         JNC     ??LCD_intro_6
+   \   000044   2A42         MOV.W   #0x4, R10
+     27            
+     28            switch(check_counter){
+   \                     ??LCD_intro_6:
+   \   000046   0F4A         MOV.W   R10, R15
+   \   000048   0F83         SUB.W   #0x0, R15
+   \   00004A   0824         JEQ     ??LCD_intro_7
+   \   00004C   1F83         SUB.W   #0x1, R15
+   \   00004E   3224         JEQ     ??LCD_intro_8
+   \   000050   1F83         SUB.W   #0x1, R15
+   \   000052   5C24         JEQ     ??LCD_intro_9
+   \   000054   1F83         SUB.W   #0x1, R15
+   \   000056   8624         JEQ     ??LCD_intro_10
+   \   000058   1F83         SUB.W   #0x1, R15
+   \   00005A   AF3C         JMP     ??LCD_intro_0
+     29          
+     30           
+     31            case 0:
+     32            strcpy(display_line[DISPLAY_LINE_0], "   What   ");
+   \                     ??LCD_intro_7:
+   \   00005C   3D40....     MOV.W   #`?<Constant "   What   ">`, R13
+   \   000060   3C40....     MOV.W   #display_line, R12
+   \   000064   ........     CALLA   #strcpy
+     33            update_string(display_line[DISPLAY_LINE_0], LCD_LINE_0);
+   \   000068   0D43         MOV.W   #0x0, R13
+   \   00006A   ........     CALLA   #update_string
+     34              
+     35            strcpy(display_line[DISPLAY_LINE_1], "   is     ");
+   \   00006E   3D40....     MOV.W   #`?<Constant "   is     ">`, R13
+   \   000072   3C40....     MOV.W   #display_line + 11, R12
+   \   000076   ........     CALLA   #strcpy
+     36            update_string(display_line[DISPLAY_LINE_1], LCD_LINE_1);
+   \   00007A   1D43         MOV.W   #0x1, R13
+   \   00007C   3C40....     MOV.W   #display_line + 11, R12
+   \   000080   ........     CALLA   #update_string
+     37            
+     38            strcpy(display_line[DISPLAY_LINE_2], "   my     ");
+   \   000084   3D40....     MOV.W   #`?<Constant "   my     ">`, R13
+   \   000088   3C40....     MOV.W   #display_line + 22, R12
+   \   00008C   ........     CALLA   #strcpy
+     39            update_string(display_line[DISPLAY_LINE_2], LCD_LINE_2);
+   \   000090   2D43         MOV.W   #0x2, R13
+   \   000092   3C40....     MOV.W   #display_line + 22, R12
+   \   000096   ........     CALLA   #update_string
+     40            
+     41            strcpy(display_line[DISPLAY_LINE_3], " purpose? ");
+   \   00009A   3D40....     MOV.W   #`?<Constant " purpose? ">`, R13
+   \   00009E   3C40....     MOV.W   #display_line + 33, R12
+   \   0000A2   ........     CALLA   #strcpy
+     42            update_string(display_line[DISPLAY_LINE_3], LCD_LINE_3);
+   \   0000A6   3D400300     MOV.W   #0x3, R13
+   \   0000AA   3C40....     MOV.W   #display_line + 33, R12
+   \   0000AE   ........     CALLA   #update_string
+     43            break;
+   \   0000B2   833C         JMP     ??LCD_intro_0
+     44            
+     45            
+     46            case 1:
+     47            strcpy(display_line[DISPLAY_LINE_0], "   You    ");
+   \                     ??LCD_intro_8:
+   \   0000B4   3D40....     MOV.W   #`?<Constant "   You    ">`, R13
+   \   0000B8   3C40....     MOV.W   #display_line, R12
+   \   0000BC   ........     CALLA   #strcpy
+     48            update_string(display_line[DISPLAY_LINE_0], LCD_LINE_0);
+   \   0000C0   0D43         MOV.W   #0x0, R13
+   \   0000C2   ........     CALLA   #update_string
+     49            
+     50            strcpy(display_line[DISPLAY_LINE_1], "   go     ");
+   \   0000C6   3D40....     MOV.W   #`?<Constant "   go     ">`, R13
+   \   0000CA   3C40....     MOV.W   #display_line + 11, R12
+   \   0000CE   ........     CALLA   #strcpy
+     51            update_string(display_line[DISPLAY_LINE_1], LCD_LINE_1);
+   \   0000D2   1D43         MOV.W   #0x1, R13
+   \   0000D4   3C40....     MOV.W   #display_line + 11, R12
+   \   0000D8   ........     CALLA   #update_string
+     52            
+     53            strcpy(display_line[DISPLAY_LINE_2], "   in     ");
+   \   0000DC   3D40....     MOV.W   #`?<Constant "   in     ">`, R13
+   \   0000E0   3C40....     MOV.W   #display_line + 22, R12
+   \   0000E4   ........     CALLA   #strcpy
+     54            update_string(display_line[DISPLAY_LINE_2], LCD_LINE_2);
+   \   0000E8   2D43         MOV.W   #0x2, R13
+   \   0000EA   3C40....     MOV.W   #display_line + 22, R12
+   \   0000EE   ........     CALLA   #update_string
+     55            
+     56            strcpy(display_line[DISPLAY_LINE_3], "  circles.");
+   \   0000F2   3D40....     MOV.W   #`?<Constant "  circles.">`, R13
+   \   0000F6   3C40....     MOV.W   #display_line + 33, R12
+   \   0000FA   ........     CALLA   #strcpy
+     57            update_string(display_line[DISPLAY_LINE_3], LCD_LINE_3);
+   \   0000FE   3D400300     MOV.W   #0x3, R13
+   \   000102   3C40....     MOV.W   #display_line + 33, R12
+   \   000106   ........     CALLA   #update_string
+     58            break;
+   \   00010A   573C         JMP     ??LCD_intro_0
+     59            
+     60            
+     61            
+     62            case 2:
+     63            strcpy(display_line[DISPLAY_LINE_0], "    Oh    ");
+   \                     ??LCD_intro_9:
+   \   00010C   3D40....     MOV.W   #`?<Constant "    Oh    ">`, R13
+   \   000110   3C40....     MOV.W   #display_line, R12
+   \   000114   ........     CALLA   #strcpy
+     64            update_string(display_line[DISPLAY_LINE_0], LCD_LINE_0);
+   \   000118   0D43         MOV.W   #0x0, R13
+   \   00011A   ........     CALLA   #update_string
+     65            
+     66            strcpy(display_line[DISPLAY_LINE_1], "    My    ");
+   \   00011E   3D40....     MOV.W   #`?<Constant "    My    ">`, R13
+   \   000122   3C40....     MOV.W   #display_line + 11, R12
+   \   000126   ........     CALLA   #strcpy
+     67            update_string(display_line[DISPLAY_LINE_1], LCD_LINE_1);
+   \   00012A   1D43         MOV.W   #0x1, R13
+   \   00012C   3C40....     MOV.W   #display_line + 11, R12
+   \   000130   ........     CALLA   #update_string
+     68            
+     69            strcpy(display_line[DISPLAY_LINE_2], "    God.  ");
+   \   000134   3D40....     MOV.W   #`?<Constant "    God.  ">`, R13
+   \   000138   3C40....     MOV.W   #display_line + 22, R12
+   \   00013C   ........     CALLA   #strcpy
+     70            update_string(display_line[DISPLAY_LINE_2], LCD_LINE_2);
+   \   000140   2D43         MOV.W   #0x2, R13
+   \   000142   3C40....     MOV.W   #display_line + 22, R12
+   \   000146   ........     CALLA   #update_string
+     71            
+     72            strcpy(display_line[DISPLAY_LINE_3], "          ");
+   \   00014A   3D40....     MOV.W   #`?<Constant "          ">`, R13
+   \   00014E   3C40....     MOV.W   #display_line + 33, R12
+   \   000152   ........     CALLA   #strcpy
+     73            update_string(display_line[DISPLAY_LINE_3], LCD_LINE_3);
+   \   000156   3D400300     MOV.W   #0x3, R13
+   \   00015A   3C40....     MOV.W   #display_line + 33, R12
+   \   00015E   ........     CALLA   #update_string
+     74            break;
+   \   000162   2B3C         JMP     ??LCD_intro_0
+     75            
+     76            case 3:
+     77            strcpy(display_line[DISPLAY_LINE_0], "          ");
+   \                     ??LCD_intro_10:
+   \   000164   3D40....     MOV.W   #`?<Constant "          ">`, R13
+   \   000168   3C40....     MOV.W   #display_line, R12
+   \   00016C   ........     CALLA   #strcpy
+     78            update_string(display_line[DISPLAY_LINE_0], LCD_LINE_0);
+   \   000170   0D43         MOV.W   #0x0, R13
+   \   000172   ........     CALLA   #update_string
+     79            
+     80            strcpy(display_line[DISPLAY_LINE_1], "          ");
+   \   000176   3D40....     MOV.W   #`?<Constant "          ">`, R13
+   \   00017A   3C40....     MOV.W   #display_line + 11, R12
+   \   00017E   ........     CALLA   #strcpy
+     81            update_string(display_line[DISPLAY_LINE_1], LCD_LINE_1);
+   \   000182   1D43         MOV.W   #0x1, R13
+   \   000184   3C40....     MOV.W   #display_line + 11, R12
+   \   000188   ........     CALLA   #update_string
+     82            
+     83            strcpy(display_line[DISPLAY_LINE_2], "          ");
+   \   00018C   3D40....     MOV.W   #`?<Constant "          ">`, R13
+   \   000190   3C40....     MOV.W   #display_line + 22, R12
+   \   000194   ........     CALLA   #strcpy
+     84            update_string(display_line[DISPLAY_LINE_2], LCD_LINE_2);
+   \   000198   2D43         MOV.W   #0x2, R13
+   \   00019A   3C40....     MOV.W   #display_line + 22, R12
+   \   00019E   ........     CALLA   #update_string
+     85            
+     86            strcpy(display_line[DISPLAY_LINE_3], "          ");
+   \   0001A2   3D40....     MOV.W   #`?<Constant "          ">`, R13
+   \   0001A6   3C40....     MOV.W   #display_line + 33, R12
+   \   0001AA   ........     CALLA   #strcpy
+     87            update_string(display_line[DISPLAY_LINE_3], LCD_LINE_3);
+   \   0001AE   3D400300     MOV.W   #0x3, R13
+   \   0001B2   3C40....     MOV.W   #display_line + 33, R12
+   \   0001B6   ........     CALLA   #update_string
+     88            
+     89            break;
+     90            
+     91            case 4:
+     92              break;
+     93            
+     94            }
+     95            
+     96            
+     97          }
+   \                     ??LCD_intro_0:
+   \   0001BA   3A41         POP.W   R10
+   \   0001BC   1001         RETA
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   What   ">`:
+   \   000000   202020576861 DC8 "   What   "
+   \            7420202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   is     ">`:
+   \   000000   202020697320 DC8 "   is     "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   my     ">`:
+   \   000000   2020206D7920 DC8 "   my     "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant " purpose? ">`:
+   \   000000   20707572706F DC8 " purpose? "
+   \            73653F2000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   You    ">`:
+   \   000000   202020596F75 DC8 "   You    "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   go     ">`:
+   \   000000   202020676F20 DC8 "   go     "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   in     ">`:
+   \   000000   202020696E20 DC8 "   in     "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "  circles.">`:
+   \   000000   202063697263 DC8 "  circles."
+   \            6C65732E00  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "    Oh    ">`:
+   \   000000   202020204F68 DC8 "    Oh    "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "    My    ">`:
+   \   000000   202020204D79 DC8 "    My    "
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "    God.  ">`:
+   \   000000   20202020476F DC8 "    God.  "
+   \            642E202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "          ">`:
+   \   000000   202020202020 DC8 "          "
+   \            2020202000  
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      6   LCD_intro
+        6   -> strcpy
+        6   -> update_string
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      11  ?<Constant "          ">
+      11  ?<Constant "    God.  ">
+      11  ?<Constant "    My    ">
+      11  ?<Constant "    Oh    ">
+      11  ?<Constant "   What   ">
+      11  ?<Constant "   You    ">
+      11  ?<Constant "   go     ">
+      11  ?<Constant "   in     ">
+      11  ?<Constant "   is     ">
+      11  ?<Constant "   my     ">
+      11  ?<Constant "  circles.">
+      11  ?<Constant " purpose? ">
+     446  LCD_intro
+
+ 
+ 446 bytes in segment CODE
+ 132 bytes in segment DATA16_C
+ 
+ 446 bytes of CODE  memory
+ 132 bytes of CONST memory
+
+Errors: none
+Warnings: none
